@@ -1,0 +1,7 @@
+const Products =()=>{
+    (
+        <>
+        <div></div>
+        </>
+    )
+}
