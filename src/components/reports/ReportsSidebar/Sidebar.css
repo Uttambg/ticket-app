@@ -1,0 +1,152 @@
+/* Container for flex layout */
+.container {
+    display: flex;
+   width: 1;
+    height: 100%;
+ 
+   
+}
+
+/* Flex item with minimum width and flexible growth */
+.sidebar {
+  
+    box-sizing: border-box;
+    height: 100%;
+    min-width: 240px;
+    flex: 0 1 9.09091%;
+   margin-left: -170px;
+    border-left: 1px solid #d3d3d3; /* Light grey border on the left side */
+    margin-left: -28px;
+    background-color: var(--surface-background); /* Optionally, you can set a background color */
+}
+
+
+.main-content {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Container with background color, text color, and border color */
+.header {
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: var(--surface-primary-default);
+    color: var(--content-basic-primary);
+    border-color: var(--border-basic-secondary);
+    border-bottom: 1px solid #d3d3d3;
+    
+}
+
+/* Fixed-height container for header */
+.page-header {
+    height: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid var(--border-basic-secondary);
+    background-color: var(--surface-primary-default);
+   
+}
+
+/* Header text styling */
+.header-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--content-basic-primary);
+    height: 52px;
+    line-height: 52px;
+    letter-spacing: 0.3px;
+    padding-left: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 30px;
+
+}
+
+/* Container for content below the header */
+.content {
+    margin: 8px;
+    position: relative;
+    height: calc(100% - 52px);
+    overflow-y: auto;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+/* Navigation list styling */
+.nav-list {
+    list-style: none;
+    padding: 0;
+   
+    margin-bottom: 20px;
+}
+.item{
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    margin-bottom: 30px;
+    padding: 10px;
+    
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: var(--content-basic-primary);
+    
+}
+
+.nav-item a.active {
+    font-weight: bold;
+}
+/* Existing styles remain unchanged */
+
+/* Media Queries for Responsive Sidebar */
+@media (max-width: 576px) {
+    .sidebar {
+        min-width: 100px; /* Further reduce for small devices */
+        position: fixed; /* Fix position */
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust to center */
+        height: auto; /* Allow height to adjust based on content */
+        z-index: 1000; /* Ensure it's above other content */
+    }
+
+    .container {
+        justify-content: center; /* Center content */
+        align-items: center; /* Center vertically */
+        height: 100vh; /* Full viewport height */
+    }
+
+    /* Hide the sidebar on the Last7days page */
+    .container.hide-sidebar .sidebar {
+        display: none;
+    }
+}
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin-bottom: 10px;
+}
+
+.nav-link {
+    text-decoration: none;
+    
+    font-weight: normal; /* Default weight for non-active links */
+}
+
+.nav-link-item.active {
+    font-weight: bold; /* Bold for active link */
+    color: var(--active-link-color, #007bff); /* Optionally change color for active link */
+}
+
+

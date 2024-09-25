@@ -1,0 +1,182 @@
+.report-header{
+    display: flex;
+    
+}
+
+.last7days-con {
+    box-sizing: border-box;
+    height: 100%;
+    border-left: 1px solid var(--border-basic-secondary);
+    min-width: 0px;
+    -webkit-box-flex: 10;
+    flex: 10 1 90.9091%;    
+    
+    border-left: 1px solid #d3d3d3; /* Add this line for the full border */
+}
+
+.content-report{
+        width: 100%;
+        height: 100%;
+        display: block;
+}
+
+.main-con {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.right-con {
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    background-color: var(--surface-primary-default);
+    color: var(--content-basic-primary);
+    border-color: var(--border-basic-secondary);
+    
+}
+
+
+.last-con {
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: center;
+    width: 100%;
+    height: 52px;
+    position: relative;
+    text-align: center;
+    box-sizing: border-box;
+    border-bottom:  1px solid #d3d3d3;
+    background-color: var(--surface-primary-default);
+    border-bottom:1px solid #d3d3d3;
+}
+.heading {
+    
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--content-basic-primary);
+        height: 52px;
+        line-height: 52px;
+        letter-spacing: 0.3px;
+        padding-left: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+        border-bottom: 2px solid var(--border-basic-secondary); /* Add this line for bottom border */
+    
+    
+    
+}
+.inside-con {
+    position: relative;
+    height: calc(100% - 52px);
+    z-index: 0;
+    overflow-y: auto;
+}
+.inside-con-tickets {
+    padding: 20px 15px;
+}
+.reports-tickets-con {
+    flex-wrap: wrap;
+    -webkit-box-pack: center;
+    justify-content: center;
+    display: flex;
+}
+
+.ticket-report-container {
+    border: 1px solid #cccccc; 
+    border-radius: 8px; 
+    padding: 16px; 
+    background-color: #fff; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    margin-top: 50px;
+}
+
+.report-link {
+    text-decoration: none;
+    color: inherit; /* Inherit color for links */
+}
+
+.report-content {
+    margin-bottom: 16px; /* Spacing between content and summary */
+}
+
+.report-header {
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+}
+
+.report-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.report-count {
+    font-size: 2em;
+    color: #007bff; /* Example color */
+}
+
+.report-subtitle {
+    font-size: 0.8em;
+    color: #666; /* Example color */
+}
+
+.chart-container {
+    /* Styles for your chart */
+    width: 532px;
+    
+}
+
+.summary-container {
+    display: flex;
+    justify-content: space-between; /* Space between summary items */
+    border-top: 1px solid #d3d3d3;
+    margin-bottom: 10px;
+}
+
+.summary-item {
+    text-align: center;
+    flex: 1; /* Flex to equally distribute items */
+    margin: 0 8px; /* Spacing between items */
+}
+
+.summary-item h2 {
+    margin: 4px 0; /* Spacing for the heading */
+}
+.report-info-container {
+    margin-top: var(--spacing-2);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #d3d3d3;
+}
+.report-info-text{
+    line-height: 20px;
+    letter-spacing: -.1px;
+    font-size: 13px;
+    font-weight: 400;
+    font-style: normal;
+    margin-top: 20px;
+
+}
+
+
+.toggle-table:hover {
+    background-color: #f0f0f0; /* Light gray on hover */
+}
+.inside-con {
+    position: relative;
+    height: calc(100vh - 102px); 
+    z-index: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+   
+}
+.inside-con-tickets {
+    padding: 10px 15px;
+    width: 100%;
+    overflow-x: hidden;
+    flex-grow: 1;
+  
+}
