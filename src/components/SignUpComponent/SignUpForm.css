@@ -1,0 +1,77 @@
+.signup-logo {
+  font-size: 4rem; /* Adjust the size of the logo */
+  color: #333; /* Adjust the color of the logo */
+  margin-bottom: 1.5rem; /* Adds spacing between the logo and the rest of the form */
+}
+
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+  position: relative;
+}
+
+/* Error pop-up message */
+.error-popup {
+  position: absolute;
+  top: 10px; /* Position it just above the form */
+  padding: 1rem;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  width: 400px;
+  text-align: center;
+  z-index: 999; /* Ensure it's above all other elements */
+}
+
+.signup-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+}
+
+.signup-form h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.form-group input,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}

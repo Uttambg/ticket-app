@@ -34,6 +34,16 @@ export const updateTicket = async (id: string, updatedData: { status: string | n
   return response.data;
 };
 
+export const addAgent = async (ticketId: string, agentId: number) => {
+  const response = await axios.put(`${API_BASE_URL}/api/${ticketId}/assign-agent/${agentId}`, {
+    // Include any necessary data here
+    // e.g., status: "some status" if required by your API
+  });
+  return response.data;
+};
+ 
+ 
+
 // Function for login
 export const apiClient = {
   login: async (email: string, password: string): Promise<string> => {

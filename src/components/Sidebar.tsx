@@ -30,13 +30,13 @@ import PriorityDropdown from "./PriorityDropdown";
 import AgentDropdown from "./AgentDropdown";
 import useTickets from "../api/useTickets"; // Ensure the path is correct
 import { Ticket, User } from "../types/Ticket";
-
+ 
 interface SidebarProps {
   window?: () => Window;
 }
-
+ 
 const drawerWidth = 240;
-
+ 
 // Styled components
 const CustomTableCell = styled(TableCell)(({ theme }) => ({
   fontSize: "0.875rem",
@@ -44,18 +44,18 @@ const CustomTableCell = styled(TableCell)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
   borderTop: `1px solid ${theme.palette.divider}`,
 }));
-
+ 
 const CustomTableCellStyle = styled(TableCell)(({ theme }) => ({
   padding: "8px 16px",
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
-
+ 
 const CheckboxCell = styled(TableCell)(({ theme }) => ({
   padding: "8px",
   borderBottom: `1px solid ${theme.palette.divider}`,
   borderTop: `1px solid ${theme.palette.divider}`,
 }));
-
+ 
 const Logo = styled(Box)(({ theme }) => ({
   width: 32,
   height: 32,
@@ -69,7 +69,7 @@ const Logo = styled(Box)(({ theme }) => ({
   fontWeight: "bold",
   marginRight: 8,
 }));
-
+ 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -79,31 +79,40 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     new Set()
   );
   const [selectAll, setSelectAll] = React.useState(false);
+ 
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedPriority, setSelectedPriority] = React.useState<string | null>(
     null
   );
-  const [selectedAgent, setSelectedAgent] = React.useState<string | null>(null);
+  const [selectedAgent, setSelectedAgent] = React.useState<number | null>(null);
+  const [agentId, setAgentId] = React.useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = React.useState<string | null>(
     null
   );
   const [showDropdowns, setShowDropdowns] = React.useState(false);
-
+ 
   const navigate = useNavigate();
-  const { tickets, users, uniqueAgents, loading,userRole, handleUpdateTicket } =
+  const { tickets, users, uniqueAgents, loading,userRole,allAgents, handleUpdateTicket ,handleAssignAgent} =
     useTickets();
-
+ 
   const handleDrawerClose = () => {
     setIsClosing(true);
     setMobileOpen(false);
   };
-
+ 
+  const extractPlainText = (htmlContent: string) => {
+    // Create a temporary DOM element to use the browser's HTML parser
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent; // Set the inner HTML
+    return tempDiv.innerText; // Return the plain text
+  };
+ 
   const handleDrawerToggle = () => {
     if (!isClosing) {
       setMobileOpen(!mobileOpen);
     }
   };
-
+ 
   const handleMenuClick = (text: string) => {
     if (text === "New Ticket") {
       navigate("/new-ticket"); // Navigate to the new ticket page
@@ -112,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       setSearchQuery("");
     }
   };
-
+ 
   const handleCheckboxChange = (ticket: Ticket) => {
     setSelectedTickets((prev) => {
       const newSelected = new Set(prev);
@@ -125,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       return newSelected;
     });
   };
-
+ 
   const handleSelectAllChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -134,13 +143,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     setSelectedTickets(isChecked ? new Set(tickets) : new Set());
     setShowDropdowns(isChecked); // Show dropdowns if all tickets are selected
   };
-
-
+ 
+ 
   const filteredTickets = () => {
     const now = new Date();
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
-
+ 
     return tickets.filter((ticket) => {
       const matchesStatus = (() => {
         if (selectedMenu === "Tickets To Handle") {
@@ -161,7 +170,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         }
         return true;
       })();
-
+ 
       const matchesSearch = searchQuery
         ? (users[ticket.userId]?.name || "Unknown")
           .toLowerCase()
@@ -178,51 +187,50 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           .includes(searchQuery.toLowerCase()) ||
         ticket.status.toLowerCase().includes(searchQuery.toLowerCase())
         : true;
-
+ 
       return matchesStatus && matchesSearch;
     });
   };
-
+ 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
   };
-
+ 
   const getLogo = (name: string) => {
     return name.charAt(0).toUpperCase();
   };
-
+ 
   const handleRequesterClick = (ticketId: string) => {
     navigate(`/ticket/${ticketId}`); // Navigate to the ticket details page using ID
   };
-
+ 
   const handleApplyChanges = () => {
     if (selectedTickets.size > 0) {
       selectedTickets.forEach((ticket) => {
         const updatedData = {
           status: selectedStatus || ticket.status,
           priority: selectedPriority || ticket.priority,
-          assignedAgent: selectedAgent || ticket.assignedAgent,
           messages: null,
         };
-
+ 
         handleUpdateTicket(ticket.id, updatedData);
+ 
+        if (selectedAgent !== null) { // Use selectedAgent instead of agentId
+          handleAssignAgent(ticket.id, selectedAgent);
+        }
       });
-
+ 
+      // Clear selections and reset states
       setSelectedTickets(new Set());
       setSelectedStatus(null);
       setSelectedPriority(null);
-      setSelectedAgent(null);
-      setShowDropdowns(false); // Hide dropdowns after applying changes
+      setSelectedAgent(null); // Reset the selected agent
+      setShowDropdowns(false);
     }
   };
-  const extractPlainText = (htmlContent: string) => {
-    // Create a temporary DOM element to use the browser's HTML parser
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlContent; // Set the inner HTML
-    return tempDiv.innerText; // Return the plain text
-  };
-
-
+ 
+ 
+ 
   const drawer = (
     <div>
       <Box className="sidebar-header" sx={{ padding: 2, marginTop: "-10px" }}>
@@ -313,29 +321,29 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       </List>
     </div>
   );
-
+ 
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
+ 
   if (loading) {
     return <div>Loading...</div>; // Display loading indicator
   }
-
+ 
   // Enable the Apply button if any dropdown has a selected value
   const isApplyEnabled =
     selectedTickets.size > 0 &&
     (selectedPriority !== null ||
       selectedAgent !== null ||
       selectedStatus !== null);
-
+ 
   return (
     // <div>
     <Box sx={{ display: "flex", width: "100%" }}>
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 <AppBar
   sx={{
     width: "100%",
@@ -370,11 +378,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     </Typography>
   </Toolbar>
 </AppBar>
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
       <Box
         className="sidebar-nav"
         component="nav"
@@ -401,7 +409,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         >
           {drawer}
         </Drawer>
-
+ 
         <Drawer
           variant="permanent"
           sx={{
@@ -417,13 +425,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           {drawer}
         </Drawer>
       </Box>
-
+ 
       {/* <Box
         className="sidebar-main"
         component="main"
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
       > */}
-
+ 
       <Box
         className="sidebar-main"
         component="main"
@@ -433,7 +441,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         <Typography variant="h6" gutterBottom>
           {selectedMenu}
         </Typography>
-
+ 
         {/* Dropdowns and Apply button section */}
         {showDropdowns && (
           <Box
@@ -450,19 +458,26 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 setSelectedPriority(priority);
               }}
             />
-            <AgentDropdown
-              agents={uniqueAgents}
-              selectedAgent={selectedAgent}
-              onAgentChange={(agent) => {
-                setSelectedAgent(agent);
-              }}
-            />
+           
+           
+<AgentDropdown
+  selectedAgent={selectedAgent} // Correctly reflect the selected agent
+  onAgentChange={(id) => {
+    console.log('Selected agent ID:', id); // Debug log
+    setSelectedAgent(id); // Update state on selection
+  }}
+  allAgents={allAgents} // Pass the fetched agents
+  loading={loading} // Pass the loading state
+/>
+ 
+ 
+ 
             <Button variant="contained" onClick={handleApplyChanges}>
               Apply
             </Button>
           </Box>
         )}
-
+ 
         <TableContainer
           className="sidebar-table-container"
           component={Paper}
@@ -543,9 +558,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     // </div>
   );
 };
-
+ 
 Sidebar.propTypes = {
   window: PropTypes.func,
 };
-
+ 
 export default Sidebar;
+ 
+ 
