@@ -1,13 +1,14 @@
 // src/api/apiClient.ts
 import axios from 'axios';
-import { LoginRequest, LoginResponse } from '../types/Ticket'; // Adjust the import based on your project structure
+import { LoginRequest, LoginResponse, Message, Ticket } from '../types/Ticket'; // Adjust the import based on your project structure
 
 const API_BASE_URL = 'http://localhost:8888';
 
-export const fetchTickets = async () => {
+export const fetchTickets = async (): Promise<Ticket[]> => {
   const response = await axios.get(`${API_BASE_URL}/api/tickets`);
   return response.data;
 };
+ 
 
 export const fetchUserById = async (id: number) => {
   const response = await axios.get(`${API_BASE_URL}/users/get/${id}`);
@@ -42,6 +43,43 @@ export const addAgent = async (ticketId: string, agentId: number) => {
   return response.data;
 };
  
+// Function to add a message to a ticket
+export const addMessageToTicket = (ticketId: string, message: Message): Promise<Message> => {
+  return axios
+    .post(`${API_BASE_URL}/api/tickets/${ticketId}/messages`, message)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error('Error adding message:', error);
+      throw error;
+    });
+};
+ 
+// Function to fetch all messages for a ticket by ID
+export const getMessagesForTicket = (ticketId: string): Promise<Message[]> => {
+  return axios
+    .get(`${API_BASE_URL}/api/tickets/${ticketId}/messages`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error('Error fetching messages:', error);
+      throw error;
+    });
+};
+ 
+// Function to delete a ticket by ID
+export const deleteTicket = async (id: string): Promise<void> => {
+  try {
+    await axios.delete(`${API_BASE_URL}/tickets/${id}`);
+  } catch (error) {
+    console.error('Error deleting ticket:', error);
+    throw error; // Propagate error for handling in the calling component
+  }
+};
+ 
+// Function to fetch ticket details by ID
+export const fetchTicketDetails = async (id: string) => {
+  const response = await axios.get(`${API_BASE_URL}/api/tickets/${id}`);
+  return response.data;
+};
  
 
 // Function for login

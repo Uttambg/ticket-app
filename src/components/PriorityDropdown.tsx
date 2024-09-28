@@ -14,7 +14,6 @@ interface PriorityDropdownProps {
  
 const PriorityDropdown: React.FC<PriorityDropdownProps> = ({ selectedPriority, onPriorityChange }) => {
   const priorities = [
-    { value: 'None', label: <em>None</em> },
     { value: 'Low', label: 'Low' },
     { value: 'Medium', label: 'Medium' },
     { value: 'High', label: 'High' },

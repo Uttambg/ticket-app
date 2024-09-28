@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
-import { useAuth } from './authContext';// Import the AuthContext
+import { useAuth } from './authContext'; // Import the AuthContext
 
 export const NewTicket: React.FC = () => {
   const [message, setMessage] = useState('');
@@ -53,12 +53,15 @@ export const NewTicket: React.FC = () => {
         console.log('Response:', response); // Log the response
 
         if (response.ok) {
+          const responseData = await response.json(); // Assuming the response contains the ticket ID
+          const ticketId = responseData.id; // Adjust this according to your API response structure
+
           console.log('Ticket submitted successfully');
           setMessage('');
           setSubject('');
           setPriority('Low');
           setAttachment(null);
-          navigate('/success');
+          navigate(`/ticket/${ticketId}`); // Navigate to the newly created ticket
         } else {
           console.error('Error submitting the ticket');
         }

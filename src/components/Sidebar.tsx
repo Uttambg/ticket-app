@@ -92,7 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   const [showDropdowns, setShowDropdowns] = React.useState(false);
  
   const navigate = useNavigate();
-  const { tickets, users, uniqueAgents, loading,userRole,allAgents, handleUpdateTicket ,handleAssignAgent} =
+  const { tickets, users, uniqueAgents, loading, userRole, allAgents, handleUpdateTicket, handleAssignAgent } =
     useTickets();
  
   const handleDrawerClose = () => {
@@ -150,50 +150,64 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(now.getDate() - 7);
  
-    return tickets.filter((ticket) => {
-      const matchesStatus = (() => {
-        if (selectedMenu === "Tickets To Handle") {
-          return (
-            ticket.status.toLowerCase() === "new" &&
-            (ticket.assignedAgent || "unassigned").toLowerCase() ===
-            "unassigned"
-          );
-        } else if (selectedMenu === "My New Tickets") {
-          return ticket.status.toLowerCase() === "NEW";
-        } else if (selectedMenu === "My Tickets Last 7 Days") {
-          const ticketDate = new Date(ticket.createdAt);
-          return ticketDate >= sevenDaysAgo;
-        } else if (
-          ["New", "Closed", "InProgress", "Solved"].includes(selectedMenu)
-        ) {
-          return ticket.status.toLowerCase() === selectedMenu.toLowerCase();
-        }
-        return true;
-      })();
+    const safeParseDate = (dateString:string) :Date => {
+        const date = new Date(dateString);
+        return isNaN(date.getTime()) ? new Date(0) : date; // Fallback to epoch if invalid
+    };
  
-      const matchesSearch = searchQuery
-        ? (users[ticket.userId]?.name || "Unknown")
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (ticket.assignedAgent || "Unassigned")
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        (ticket.messages.length > 0
-          ? ticket.messages[ticket.messages.length - 1].content
-          : "No messages"
-        )
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        ticket.status.toLowerCase().includes(searchQuery.toLowerCase())
-        : true;
- 
-      return matchesStatus && matchesSearch;
+    const sortedTickets = [...tickets].sort((a, b) => {
+        const aDate = safeParseDate(a.createdAt);
+        const bDate = safeParseDate(b.createdAt);
+        return bDate.getTime() - aDate.getTime(); // Use getTime() for comparison
     });
-  };
+ 
+    return sortedTickets.filter((ticket) => {
+        const matchesStatus = (() => {
+            if (selectedMenu === "Tickets To Handle") {
+                return (
+                    ticket.status.toLowerCase() === "new" &&
+                    (ticket.assignedAgent || "unassigned").toLowerCase() ===
+                    "unassigned"
+                );
+            } else if (selectedMenu === "My New Tickets") {
+                return ticket.status.toLowerCase() === "new";
+            } else if (selectedMenu === "My Tickets Last 7 Days") {
+                const ticketDate = safeParseDate(ticket.createdAt);
+                return ticketDate >= sevenDaysAgo;
+            } else if (
+                ["New", "Closed", "InProgress", "Solved"].includes(selectedMenu)
+            ) {
+                return ticket.status.toLowerCase() === selectedMenu.toLowerCase();
+            }
+            return true;
+        })();
+ 
+        const matchesSearch = searchQuery
+            ? (users[ticket.userId]?.name || "Unknown")
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+            ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (ticket.assignedAgent || "Unassigned")
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+            (ticket.messages.length > 0
+                ? ticket.messages[ticket.messages.length - 1].content
+                : "No messages"
+            )
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+            ticket.status.toLowerCase().includes(searchQuery.toLowerCase())
+            : true;
+ 
+        return matchesStatus && matchesSearch;
+    });
+};
  
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+  };
+  const countTickets = (filterFn: (ticket: Ticket) => boolean): number => {
+    return tickets.filter(filterFn).length;
   };
  
   const getLogo = (name: string) => {
@@ -231,9 +245,22 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
  
  
  
+ 
+ 
+ 
+ 
   const drawer = (
-    <div>
-      <Box className="sidebar-header" sx={{ padding: 2, marginTop: "-10px" }}>
+    <Box sx={{ width: "100%" }}>
+      {/* Sidebar Header */}
+      <Box
+        className="sidebar-header"
+        sx={{
+          padding: 2,
+          marginTop: "-10px",
+          backgroundColor: "#f5f5f5",
+          borderBottom: "1px solid #e0e0e0",
+        }}
+      >
         <Box
           className="sidebar-header-content"
           sx={{
@@ -243,84 +270,262 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             marginBottom: 1,
           }}
         >
-          <Typography variant="h6">Tickets</Typography>
-          {userRole === 'user' && ( // Show "New Ticket" button only for user
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", fontSize: "1.2rem", color: "#333" }}
+          >
+            Tickets
+          </Typography>
+          {userRole === "user" && (
             <Button
               variant="contained"
               color="primary"
+              sx={{
+                textTransform: "none",
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "#1261a9",
+                  boxShadow: "none",
+                },
+              }}
               onClick={() => handleMenuClick("New Ticket")}
             >
               New Ticket
             </Button>
           )}
         </Box>
+      </Box>
+ 
+      {/* Moved Divider Above Search Bar */}
+      <Divider />
+ 
+      {/* Wrapped Search Bar with Box */}
+      <Box
+        sx={{
+          backgroundColor: "#fff",
+          borderRadius: 2,
+          padding: "0 10px",
+          boxShadow: "0px 1px 3px rgba(0,0,0,0.1)",
+          margin: "8px 0", // Adjust margin to create space above and below
+        }}
+      >
         <SearchBar
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
         />
       </Box>
+
+
+
+
+
+
+
+ 
+     {/* Sidebar Menu */}
+     <List className="sidebar-menu" sx={{ padding: "8px 0" }}>
+  {userRole === 'admin' ? (
+    // Admin view
+    <>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("All Recent Tickets")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="All Recent Tickets" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(() => true)} {/* Count for all tickets */}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+     
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("Tickets To Handle")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="Tickets To Handle" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(ticket =>
+              ticket.status.toLowerCase() === "new" &&
+              (ticket.assignedAgent || "unassigned").toLowerCase() === "unassigned"
+            )} {/* Count for tickets to handle */}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    </>
+  ) : (
+    // User view
+    <>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("All Recent Tickets")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="All Recent Tickets" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(() => true)} {/* Count for all tickets */}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+     
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("My New Tickets")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="My New Tickets" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(ticket => ticket.status.toLowerCase() === "new")} {/* Count for user new tickets */}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+ 
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("My Tickets Last 7 Days")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="My Tickets Last 7 Days" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(ticket => {
+              const now = new Date();
+              const sevenDaysAgo = new Date();
+              sevenDaysAgo.setDate(now.getDate() - 7);
+              return new Date(ticket.createdAt) >= sevenDaysAgo;
+            })} {/* Count for user tickets in last 7 days */}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    </>
+  )}
+</List>
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
       <Divider />
-      <List className="sidebar-menu">
-      {userRole === 'admin' ? (
-          // Admin view
-          ["All Recent Tickets",  "Tickets To Handle"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton
-                onClick={() => handleMenuClick(text)}
-                sx={{
-                  "&:hover": {
-                    color: "blue",
-                  },
-                }}
-              >
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))
-        ) : (
-          // User view
-          ["All Recent Tickets","My New Tickets", "My Tickets Last 7 Days"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton
-                onClick={() => handleMenuClick(text)}
-                sx={{
-                  "&:hover": {
-                    color: "blue",
-                  },
-                }}
-              >
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))
-        )}
-      </List>
-      <Divider />
+ 
+      {/* Status Section */}
       <Typography
         variant="h6"
-        sx={{ padding: "4px 16px 0 16px", marginBottom: 0, marginTop: 2 }}
+        sx={{
+          padding: "4px 16px",
+          marginBottom: "0",
+          marginTop: 2,
+          fontSize: "1.1rem",
+          fontWeight: "bold",
+          color: "#444",
+        }}
         className="sidebar-status-header"
       >
         Statuses
       </Typography>
-      <List className="sidebar-status-menu">
+ 
+      <List className="sidebar-status-menu" sx={{ padding: "8px 0" }}>
         {["New", "InProgress", "Solved", "Closed"].map((text) => (
           <ListItem key={text} disablePadding>
             <ListItemButton
               onClick={() => handleMenuClick(text)}
               sx={{
+                padding: "8px 16px",
+                borderRadius: "8px",
+                transition: "all 0.3s ease",
                 "&:hover": {
-                  color: "blue",
+                  color: "white",
+                  backgroundColor: "#1261a9",
                 },
               }}
             >
-              <ListItemText primary={text} />
+              <ListItemText
+                primary={text}
+                primaryTypographyProps={{ fontWeight: "medium" }}
+              />
+<Typography variant="body2" color="text.secondary" sx={{ marginLeft: 1 }}>
+          {countTickets(ticket => ticket.status.toLowerCase() === text.toLowerCase())}
+        </Typography>
+ 
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-    </div>
+    </Box>
   );
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -339,45 +544,71 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   return (
     // <div>
     <Box sx={{ display: "flex", width: "100%" }}>
- 
- 
- 
- 
- 
-<AppBar
+      <AppBar
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: 'transparent', // Set AppBar background to transparent
+        }}
+      >
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between', // Space between items
+            position: 'relative', // To position the Typography correctly
+            marginLeft: '80px', // Add left margin to the Toolbar
+            width: 'calc(100% - 80px)', // Adjust width to account for the margin
+            backgroundColor: '#1271a9', // Set Toolbar background to blue
+          }}
+        >
+        <Box
   sx={{
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: 'transparent', // Set AppBar background to transparent
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
   }}
 >
-  <Toolbar
+  <Box sx={{ width: '56px', backgroundColor: 'transparent' }} /> {/* Transparent margin area */}
+  <Typography
+    variant="h6"
+    noWrap
+    component="div"
     sx={{
-      display: 'flex',
-      justifyContent: 'space-between', // Space between items
-      position: 'relative', // To position the Typography correctly
-      marginLeft: '80px', // Add left margin to the Toolbar
-      width: 'calc(100% - 80px)', // Adjust width to account for the margin
-      backgroundColor: '#1271a9', // Set Toolbar background to blue
+      flexGrow: 1,
+      textAlign: 'center', // Center the text
+      color: 'white', // Set text color to white for visibility
+      paddingLeft: '19%', // Add left padding to shift it towards the center
+      opacity: 0,
+      transform: 'translateX(-100%)', // Start off-screen to the left
+      animation: 'slideIn 1s forwards', // Apply slide-in animation
+      fontSize: '1.2rem', // Default text size
+      transition: 'font-size 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out', // Smooth transition for hover effect
+      '@keyframes slideIn': {
+        '0%': {
+          opacity: 0,
+          transform: 'translateX(-100%)', // Start off-screen to the left
+        },
+        '100%': {
+          opacity: 1,
+          transform: 'translateX(0)', // End at the original position
+        },
+      },
+      '&:hover': {
+        fontSize: '1.8rem', // Increase text size on hover
+        transform: 'translateX(0)', // Keep it in place
+        cursor: 'pointer', // Change cursor to indicate interactivity
+      },
     }}
   >
-    <Box sx={{ width: '56px', backgroundColor: 'transparent' }} /> {/* Transparent margin area */}
-    <Typography
-      variant="h6"
-      noWrap
-      component="div"
-      sx={{
-        flexGrow: 1,
-        textAlign: 'center', // Center the text
-        color: 'white', // Set text color to white for visibility
-      }}
-    >
-      Ticket Management
-    </Typography>
-  </Toolbar>
-</AppBar>
+    Ticket Management
+  </Typography>
+</Box>
+ 
+ 
+        </Toolbar>
+      </AppBar>
  
  
  
@@ -426,134 +657,308 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         </Drawer>
       </Box>
  
-      {/* <Box
-        className="sidebar-main"
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      > */}
+ 
+ 
+ 
+ 
  
       <Box
-        className="sidebar-main"
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      >
-        <Toolbar />
-        <Typography variant="h6" gutterBottom>
-          {selectedMenu}
-        </Typography>
+  className="sidebar-main"
+  component="main"
+  sx={{ flexGrow: 1, bgcolor: "background.default", p: 3, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}
+>
+  <Toolbar />
+  <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+    {selectedMenu}
+  </Typography>
  
-        {/* Dropdowns and Apply button section */}
-        {showDropdowns && (
-          <Box
-            className="sidebar-dropdowns"
-            sx={{ display: "flex", alignItems: "center", mb: 2, gap: 2 }}
-          >
+  {/* Dropdowns and Apply button section */}
+  {showDropdowns && (
+    <Box
+      className="sidebar-dropdowns"
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        mb: 3,
+        gap: 2,
+        padding: '20px',
+        borderRadius: '16px',
+        background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1), 0 -4px 10px rgba(255, 255, 255, 0.5)',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          background: 'linear-gradient(145deg, #f0f4f8, #d0d0d0)',
+          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.15), 0 -6px 15px rgba(255, 255, 255, 0.6)',
+        },
+      }}
+    >
+      {['StatusDropdown', 'PriorityDropdown', 'AgentDropdown'].map((Dropdown, index) => (
+        <Box
+          key={index}
+          sx={{
+            flex: 1,
+            '& .MuiSelect-root': {
+              borderRadius: '12px',
+              backgroundColor: '#f7f9fc',
+              border: '1px solid #b0c4de',
+              transition: 'border 0.3s ease, background-color 0.3s ease',
+              '&:focus, &:hover': {
+                border: '2px solid #1976d2',
+                backgroundColor: '#ffffff',
+                boxShadow: '0 0 15px rgba(25, 118, 210, 0.3)',
+              },
+              '& fieldset': {
+                display: 'none',
+              },
+              '& .MuiSelect-select': {
+                padding: '14px 24px',
+                fontWeight: '500',
+                fontSize: '16px', // Increase font size for better visibility
+              },
+            },
+          }}
+        >
+          {Dropdown === 'StatusDropdown' && (
             <StatusDropdown
               selectedStatus={selectedStatus}
               setSelectedStatus={setSelectedStatus}
             />
+          )}
+          {Dropdown === 'PriorityDropdown' && (
             <PriorityDropdown
               selectedPriority={selectedPriority}
               onPriorityChange={(priority) => {
                 setSelectedPriority(priority);
               }}
             />
-           
-           
-<AgentDropdown
-  selectedAgent={selectedAgent} // Correctly reflect the selected agent
-  onAgentChange={(id) => {
-    console.log('Selected agent ID:', id); // Debug log
-    setSelectedAgent(id); // Update state on selection
-  }}
-  allAgents={allAgents} // Pass the fetched agents
-  loading={loading} // Pass the loading state
-/>
+          )}
+          {Dropdown === 'AgentDropdown' && (
+            <AgentDropdown
+              selectedAgent={selectedAgent}
+              onAgentChange={(id) => {
+                console.log('Selected agent ID:', id);
+                setSelectedAgent(id);
+              }}
+              allAgents={allAgents}
+              loading={loading}
+            />
+          )}
+        </Box>
+      ))}
+ 
+      <Button
+        variant="contained"
+        onClick={handleApplyChanges}
+        sx={{
+          backgroundColor: '#1976d2',
+          color: '#ffffff',
+          borderRadius: '12px',
+          padding: '12px 28px',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          boxShadow: '0 6px 15px rgba(25, 118, 210, 0.4)',
+          transition: 'background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease',
+          '&:hover': {
+            backgroundColor: '#0d47a1',
+            boxShadow: '0 8px 20px rgba(25, 118, 210, 0.5)',
+            transform: 'translateY(-3px)',
+          },
+          '&:active': {
+            transform: 'translateY(0)',
+            boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
+          },
+        }}
+      >
+        Apply
+      </Button>
+    </Box>
+  )}
+ 
+  {/* Table section */}
+  <TableContainer
+    className="sidebar-table-container"
+    component={Paper}
+    sx={{ marginLeft: "0", borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)' }} // Rounded corners and shadow
+  >
+    <Table>
  
  
  
-            <Button variant="contained" onClick={handleApplyChanges}>
-              Apply
-            </Button>
-          </Box>
+    <TableHead>
+  <TableRow>
+    {userRole !== 'user' && (
+      <CheckboxCell padding="checkbox">
+        <Checkbox
+          checked={selectAll}
+          onChange={handleSelectAllChange}
+          sx={{
+            color: '#1976d2', // Primary color for checkbox
+            '&.Mui-checked': {
+              color: '#1976d2', // Checked color
+            },
+            '&:hover': {
+              backgroundColor: 'transparent', // No background on hover
+            },
+          }}
+        />
+      </CheckboxCell>
+    )}
+    <CustomTableCell sx={{
+      fontWeight: 'bold',
+      color: '#333', // Darker color for better contrast
+      backgroundColor: '#f7f9fc', // Light background for header
+      padding: '12px 16px',
+      borderBottom: '2px solid #d0d0d0', // Subtle border
+      '&:hover': {
+        backgroundColor: '#e0e0e0', // Slightly darker on hover
+      },
+    }}>
+      Requester
+    </CustomTableCell>
+    <CustomTableCell sx={{
+      fontWeight: 'bold',
+      color: '#333',
+      backgroundColor: '#f7f9fc',
+      padding: '12px 16px',
+      borderBottom: '2px solid #d0d0d0',
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+    }}>
+      Subject
+    </CustomTableCell>
+    <CustomTableCell sx={{
+      fontWeight: 'bold',
+      color: '#333',
+      backgroundColor: '#f7f9fc',
+      padding: '12px 16px',
+      borderBottom: '2px solid #d0d0d0',
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+    }}>
+      Agent
+    </CustomTableCell>
+    <CustomTableCell sx={{
+      fontWeight: 'bold',
+      color: '#333',
+      backgroundColor: '#f7f9fc',
+      padding: '12px 16px',
+      borderBottom: '2px solid #d0d0d0',
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+    }}>
+      Status
+    </CustomTableCell>
+    <CustomTableCell sx={{
+      fontWeight: 'bold',
+      color: '#333',
+      backgroundColor: '#f7f9fc',
+      padding: '12px 16px',
+      borderBottom: '2px solid #d0d0d0',
+      '&:hover': {
+        backgroundColor: '#e0e0e0',
+      },
+    }}>
+      Last Message
+    </CustomTableCell>
+  </TableRow>
+</TableHead>
+ 
+ 
+ 
+ 
+ 
+      <TableBody>
+  {filteredTickets().map((ticket) => (
+   
+   <TableRow key={ticket.id}
+      sx={{
+        '&:hover': {
+          backgroundColor: '#e6f0ff', // Change background color on hover
+          cursor: 'pointer', // Change cursor to pointer
+          transform: 'scale(1.02)', // Scale effect on hover
+          transition: 'background-color 0.3s, transform 0.2s', // Smooth transition
+        },
+      }}
+    >
+     { userRole !== 'user'&&<CheckboxCell>
+        <Checkbox
+          checked={selectedTickets.has(ticket)}
+          onChange={(e) => {
+            e.stopPropagation(); // Prevent click event from bubbling up to the row
+            handleCheckboxChange(ticket);
+          }}
+        />
+      </CheckboxCell>}
+     
+      <CustomTableCellStyle
+        sx={{
+          padding: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer', // Change cursor to pointer
+        }}
+        onClick={() => handleRequesterClick(ticket.id)} // Click event for the entire cell
+      >
+        <Box className="ticket-requester" sx={{ display: "flex", alignItems: "center" }}>
+          <Logo>{getLogo(users[ticket.userId]?.name || "")}</Logo>
+          <div>
+            <Typography variant="body2">
+              {users[ticket.userId]?.name || "Unknown"}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {users[ticket.userId]?.email || "No Email"}
+            </Typography>
+          </div>
+        </Box>
+      </CustomTableCellStyle>
+ 
+      <CustomTableCell onClick={() => handleRequesterClick(ticket.id)}>{ticket.subject}</CustomTableCell>
+      <CustomTableCell onClick={() => handleRequesterClick(ticket.id)}>
+        {ticket.assignedAgent || "Unassigned"}
+      </CustomTableCell>
+      <CustomTableCellStyle onClick={() => handleRequesterClick(ticket.id)}>{ticket.status}</CustomTableCellStyle>
+      <CustomTableCell onClick={() => handleRequesterClick(ticket.id)}>
+        {ticket.messages.length > 0 ? (
+          <span>
+            {extractPlainText(ticket.messages[ticket.messages.length - 1].content)}
+          </span>
+        ) : (
+          'No messages'
         )}
+      </CustomTableCell>
+    </TableRow>
+  ))}
+</TableBody>
  
-        <TableContainer
-          className="sidebar-table-container"
-          component={Paper}
-          sx={{ marginLeft: "0" }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                {userRole !=='user'&& (
-                <CheckboxCell padding="checkbox">
-                  <Checkbox
-                    checked={selectAll}
-                    onChange={handleSelectAllChange}
-                  />
-                </CheckboxCell>
-                )}
-                <CustomTableCell>Requester</CustomTableCell>
-                <CustomTableCell>Subject</CustomTableCell>
-                <CustomTableCell>Agent</CustomTableCell>
-                <CustomTableCell>Status</CustomTableCell>
-                <CustomTableCell>Last Message</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredTickets().map((ticket) => (
-                <TableRow key={ticket.id}>
-                  {userRole !=='user'&& (
-                  <CheckboxCell>
-                    <Checkbox
-                      checked={selectedTickets.has(ticket)}
-                      onChange={() => handleCheckboxChange(ticket)}
-                    />
-                  </CheckboxCell>
-                  )}
-                  <CustomTableCellStyle
-                    onClick={() =>
-                      handleRequesterClick(
-                      ticket.id
-                      )
-                    }
-                  >
-                    <Box
-                      className="ticket-requester"
-                      sx={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Logo>{getLogo(users[ticket.userId]?.name || "")}</Logo>
-                      <div>
-                        <Typography variant="body2">
-                          {users[ticket.userId]?.name || "Unknown"}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {users[ticket.userId]?.email || "No Email"}
-                        </Typography>
-                      </div>
-                    </Box>
-                  </CustomTableCellStyle>
-                  <CustomTableCell>{ticket.subject}</CustomTableCell>
-                  <CustomTableCell>
-                    {ticket.assignedAgent || "Unassigned"}
-                  </CustomTableCell>
-                  <CustomTableCellStyle>{ticket.status}</CustomTableCellStyle>
-                  <CustomTableCell>
-                  {ticket.messages.length > 0 ? (
-                      <span>
-                        {extractPlainText(ticket.messages[ticket.messages.length - 1].content)}
-                      </span>
-                    ) : (
-                      'No messages'
-                    )}
-                  </CustomTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    </Table>
+  </TableContainer>
+</Box>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
     </Box>
     // </div>
   );
@@ -564,5 +969,7 @@ Sidebar.propTypes = {
 };
  
 export default Sidebar;
+ 
+ 
  
  

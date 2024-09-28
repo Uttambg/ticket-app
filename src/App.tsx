@@ -16,18 +16,26 @@ import GenerateReport from './components/reports/GenerateReport/GenerateReport';
 import AgentsContainer from './components/submit/AgentsContainer';
 import RightLayout from './components/submit/RightLayout';
 import SignUpForm from './components/SignUpComponent/SignUpForm';
+import TicketDetails from './components/TicketDetails';
+import PowerTable from './components/Delete';
 
 
 const App = () => {
   const location = useLocation();
+  const isSignUpPage = location.pathname === '/signup';
   const isLoginPage = location.pathname === '/';
   const [selectedAgent, setSelectedAgent] = useState<any | null>(null);
   const [showForm, setShowForm] = useState(false);
 
   return (
+    <div>
+      <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<SignUpForm />} />
+      </Routes>
     <div className="app-layout">
       {/* Protect the NavigationBar */}
-      {!isLoginPage && <ProtectedRoute element={<NavigationBar className="NavigationBar" />} />}
+      {!isLoginPage && !isSignUpPage&& <ProtectedRoute element={<NavigationBar className="NavigationBar" />} />}
 
    
 
@@ -35,12 +43,12 @@ const App = () => {
 
       <div className="content-area ">
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="ticket/:id" element={<TicketDetails />} />
           <Route path="/home" element={<ProtectedRoute element={<AppRoutes />} />} />
           <Route path="/sidebar" element={<ProtectedRoute element={<Sidebar />} />} />
           <Route path="/new-ticket" element={<ProtectedRoute element={<NewTicket />} />} />
           <Route path="/logout" element={<ProtectedRoute element={<LogoutPage />} />} />
-
+          <Route path="/delete" element={<ProtectedRoute element={<PowerTable />} />} />
           {/* Nest the routes for the reports */}
           <Route
             path="/reports/*"
@@ -61,17 +69,18 @@ const App = () => {
           <Route
             path="/agents"
             element={
-              <div className="flex" >
-                {/* AgentsContainer */}
-                <div className="w-[900px] h-full pr-0  border-r-2 border-gray-300">
-                  <AgentsContainer setSelectedAgent={setSelectedAgent} />
-                </div>
-
-                {/* RightLayout with rounded right corners */}
-                <div className="flex-grow h-full mb-[10px] pb-[0px] pr-2 rounded-r-lg overflow-hidden">
-                  <RightLayout agent={selectedAgent} /> {/* Pass selected agent */}
-                </div>
+              <div className="flex">
+              {/* AgentsContainer with a wider width */}
+              <div className="w-[700px] h-full pr-0 border-r-2 border-gray-300">
+                <AgentsContainer setSelectedAgent={setSelectedAgent} />
               </div>
+        
+              {/* RightLayout with rounded right corners */}
+              <div className="flex-grow h-full mb-[10px] pb-[0px] pr-2 rounded-r-lg overflow-hidden">
+                <RightLayout agent={selectedAgent} /> {/* Pass selected agent */}
+              </div>
+            </div>
+
             }
           />
 
@@ -79,6 +88,7 @@ const App = () => {
 
         </Routes>
       </div>
+    </div>
     </div>
   );
 };

@@ -14,8 +14,7 @@ interface StatusDropdownProps {
  
 const StatusDropdown: React.FC<StatusDropdownProps> = ({ selectedStatus, setSelectedStatus }) => {
   const statuses = [
-    { value: 'None', label: <em>None</em> },
-    { value: 'Open', label: 'Open' },
+    { value: 'New', label: 'New' },
     { value: 'InProgress', label: 'In Progress' },
     { value: 'Solved', label: 'Solved' },
     { value: 'Closed', label: 'Closed' },
