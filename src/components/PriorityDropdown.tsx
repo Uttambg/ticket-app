@@ -2,9 +2,8 @@ import React from 'react';
 import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
  
-// Styled FormControl with consistent width
 const SmallWidthFormControl = styled(FormControl)({
-  width: '200px', // Set desired width
+  width: '200px', 
 });
  
 interface PriorityDropdownProps {
@@ -24,7 +23,7 @@ const PriorityDropdown: React.FC<PriorityDropdownProps> = ({ selectedPriority, o
     <SmallWidthFormControl variant="outlined">
       <InputLabel>Set Priority</InputLabel>
       <Select
-        value={selectedPriority || ''} // Default to empty if null
+        value={selectedPriority || ''}
         onChange={(e) => onPriorityChange(e.target.value as string)}
         label="Set Priority"
       >

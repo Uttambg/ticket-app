@@ -111,7 +111,6 @@ export const NewTicket: React.FC = () => {
         if (event.target?.result && quillRef.current) {
           let base64String = event.target.result as string;
 
-          // Strip out the MIME type prefix
           if (base64String.startsWith('data:')) {
             base64String = base64String.substring(base64String.indexOf(',') + 1);
           }

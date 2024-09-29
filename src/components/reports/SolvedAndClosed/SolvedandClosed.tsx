@@ -1,13 +1,13 @@
-import ChartComponentSolvedandClosed from './ChartComponentSolvedandClosed';
 import React, { useEffect, useState } from 'react';
 import './SolvedandClosed.css';
 import SolvedClosedTable from './SolvedClosedTable';
+import ChartComponentSolvedandClosed from './ChartComponentSolvedandClosed';
 import { Ticket } from '../types'; // Adjust this path to your actual types file
-
+ 
 const SolvedAndClosed: React.FC = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+ 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -23,54 +23,51 @@ const SolvedAndClosed: React.FC = () => {
         setLoading(false);
       }
     };
-
+ 
     fetchTickets();
   }, []);
-
+ 
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  // Calculate overall counts
-  const totalSolved = tickets.filter(ticket => ticket.status === 'solved').length; // Changed here
-  const totalClosed = tickets.filter(ticket => ticket.status === 'closed').length; // Changed here
+ 
+  const totalSolved = tickets.filter(ticket => ticket.status.toLowerCase() === 'solved').length;
+  const totalClosed = tickets.filter(ticket => ticket.status.toLowerCase() === 'closed').length;
   const totalTickets = tickets.length;
-
-  // Calculate percentages
-  const solvedPercentage = totalTickets ? ((totalSolved / totalTickets) * 100).toFixed(2) : 0;
-  const closedPercentage = totalTickets ? ((totalClosed / totalTickets) * 100).toFixed(2) : 0;
-
+ 
+  const solvedPercentage = ((totalSolved / totalTickets) * 100).toFixed(1);
+  const closedPercentage = ((totalClosed / totalTickets) * 100).toFixed(1);
+ 
   return (
     <div className="last7days-con">
-      <div className="main-con">
-        <div className="right-con">
-          <div className="content-report">
-            <div className="last-con">
-              <div className="heading">Solved and Closed Tickets</div>
-            </div>
+    <div className="main-con">
+      <div className="right-con">
+        <div className="content-report">
+          <div className="last-con">
+            <div className="heading">Solved and Closed Tickets</div>
           </div>
-
-          <div className="inside-con">
-            <div className="inside-con-tickets">
-              <div className="reports-tickets-con">
-                <div className="ticket-report-container">
-                  <div className="report-content">
-                    <div className="report-header">
-                      <div className="report-title">Solved and Closed</div>
-                    </div>
-
-                    <div style={{ margin: '20px 0' }}>
-                      <p><strong>Solved Tickets:</strong> {totalSolved} ({solvedPercentage}%)</p>
-                      <p><strong>Closed Tickets:</strong> {totalClosed} ({closedPercentage}%)</p>
-                    </div>
-                    <div style={{ width: '600px', margin: '50px auto' }}>
-                      <ChartComponentSolvedandClosed tickets={tickets} />
-                      <SolvedClosedTable tickets={tickets} />
-                    </div>
-
-                    <div className="report-info-container">
-                      <p className='report-info-text'>All reports are displayed in your local time.</p>
-                    </div>
+        </div>
+ 
+        <div className="inside-con">
+          <div className="inside-con-tickets">
+            <div className="reports-tickets-con">
+              <div className="ticket-report-container">
+                <div className="report-content">
+                  <div className="report-header">
+                    <div className="report-title">Solved and Closed</div>
+                  </div>
+ 
+                  <div style={{ margin: '20px 0' }}>
+                    <p><strong>Solved Tickets:</strong> {totalSolved} ({solvedPercentage}%)</p>
+                    <p><strong>Closed Tickets:</strong> {totalClosed} ({closedPercentage}%)</p>
+                  </div>
+                  <div style={{ width: '600px', margin: '50px auto' }}>
+                    <ChartComponentSolvedandClosed tickets={tickets} />
+                    <SolvedClosedTable tickets={tickets} />
+                  </div>
+ 
+                  <div className="report-info-container">
+                    <p className='report-info-text'>All reports are displayed in your local time.</p>
                   </div>
                 </div>
               </div>
@@ -79,7 +76,10 @@ const SolvedAndClosed: React.FC = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
-
+ 
 export default SolvedAndClosed;
+ 
+ 

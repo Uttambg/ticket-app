@@ -1,32 +1,29 @@
-// src/NewTickets/NewTickets.tsx
-
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ChartComponentbyDate from './ChartComponentbyDate';
-import './newTickets.css';
 import NewTicketsTable from './NewTicketsTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Ticket as TicketType } from '../types'; // Importing the Ticket interface
-
+import { Ticket } from '../types';
+import './newTickets.css';
+ 
 const NewTickets: React.FC = () => {
-    const [tickets, setTickets] = useState<TicketType[]>([]); // Update state type
+    const [tickets, setTickets] = useState<Ticket[]>([]);
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
-    const [filteredData, setFilteredData] = useState<TicketType[]>([]); // Update state type
-    const [showTable, setShowTable] = useState(true); // Default to true
-
-    // Set default dates for the last 7 days
+    const [filteredData, setFilteredData] = useState<Ticket[]>([]);
+    const [showTable, setShowTable] = useState(true);
+    const [selectedPriority, setSelectedPriority] = useState<string>('All');
+ 
     useEffect(() => {
         const today = new Date();
         const lastWeek = new Date();
         lastWeek.setDate(today.getDate() - 7);
-
         setStartDate(lastWeek);
         setEndDate(today);
     }, []);
-
+ 
     useEffect(() => {
         const fetchTickets = async () => {
             try {
@@ -34,32 +31,36 @@ const NewTickets: React.FC = () => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const data: TicketType[] = await response.json(); // Update type here
+                const data: Ticket[] = await response.json();
                 setTickets(data);
             } catch (error) {
                 console.error('Error fetching tickets', error);
             }
         };
-
         fetchTickets();
     }, []);
-
+ 
     useEffect(() => {
         const filterTickets = () => {
             if (startDate && endDate) {
-                const filtered = tickets.filter(ticket => {
-                    const ticketDate = new Date(ticket.createdAt); // Use createdAt instead of createdDate
+                let filtered = tickets.filter(ticket => {
+                    const ticketDate = new Date(ticket.createdAt);
                     return ticketDate >= startDate && ticketDate <= endDate;
                 });
-                setFilteredData(filtered);
+ 
+                // Apply priority filter only to filteredData, but don't change the allTickets
+                if (selectedPriority !== 'All') {
+                    filtered = filtered.filter(ticket => ticket.priority === selectedPriority);
+                }
+ 
+                setFilteredData(filtered); // Only set filteredData
             } else {
                 setFilteredData(tickets);
             }
         };
-
         filterTickets();
-    }, [tickets, startDate, endDate]);
-
+    }, [tickets, startDate, endDate, selectedPriority]); // Include selectedPriority in dependencies
+ 
     return (
         <div className="last7days-con">
             <div className="main-con">
@@ -69,7 +70,6 @@ const NewTickets: React.FC = () => {
                             <div className="heading">New Tickets</div>
                         </div>
                     </div>
-
                     <div className="inside-con">
                         <div className="inside-con-tickets">
                             <div className="reports-tickets-con">
@@ -78,7 +78,6 @@ const NewTickets: React.FC = () => {
                                         <div className="report-header">
                                             <div className="report-title">New Tickets</div>
                                             <div className="report-count">{filteredData.length}</div>
-
                                             <div className="new-tickets-con">
                                                 <div className="filters">
                                                     <div className="date-picker">
@@ -100,9 +99,19 @@ const NewTickets: React.FC = () => {
                                                         />
                                                     </div>
                                                 </div>
+                                                <div className="priority-dropdown">
+                                                    <label className='priority-label'>Priority:</label>
+                                                    <select onChange={e => setSelectedPriority(e.target.value)} value={selectedPriority}>
+                                                        <option value="All">All</option>
+                                                        <option value="Urgent">Urgent</option>
+                                                        <option value="High">High</option>
+                                                        <option value="Medium">Medium</option>
+                                                        <option value="Low">Low</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div className="chart-container">
-                                                <ChartComponentbyDate tickets={filteredData} />
+                                                <ChartComponentbyDate tickets={filteredData} selectedPriority={selectedPriority} />
                                                 <div
                                                     className="toggle-table"
                                                     onClick={() => setShowTable(!showTable)}
@@ -110,13 +119,12 @@ const NewTickets: React.FC = () => {
                                                     <FontAwesomeIcon icon={showTable ? faChevronDown : faChevronRight} style={{ color: '#0066FF' }} />
                                                     <span className='break-down-heading'> New tickets breakdown</span>
                                                 </div>
-                                                {showTable && <NewTicketsTable tickets={filteredData} />}
-                                           
+                                                {showTable && <NewTicketsTable tickets={filteredData} allTickets={tickets} />}
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="report-info-container">
-                                        <p className='report-info-text'> All reports are displayed in your local time. </p>
+                                        <div className="report-info-container">
+                                            <p className='report-info-text'> All reports are displayed in your local time. </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -125,8 +133,9 @@ const NewTickets: React.FC = () => {
                 </div>
             </div>
         </div>
-        
     );
 };
-
+ 
 export default NewTickets;
+ 
+ 

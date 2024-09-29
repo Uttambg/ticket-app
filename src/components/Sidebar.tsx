@@ -932,16 +932,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     </TableRow>
   ))}
 </TableBody>
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
     </Table>
   </TableContainer>
 </Box>

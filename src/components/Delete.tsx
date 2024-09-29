@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
- 
-// Define the interface for your table data
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { useAuth } from './authContext';
+
 interface DeletedTicket {
   id: string;
   subject: string;
@@ -14,20 +14,27 @@ interface DeletedTicket {
  
 const PowerTable = () => {
   const [data, setData] = useState<DeletedTicket[]>([]);
-  const [selectAll, setSelectAll] = useState(false);
+  const { role, userId } = useAuth(); // Get role and userId from useAuth
  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8888/api/deletedtickets/all');
-       
+        // Determine the URL based on the role
+        const url =
+          role === 'admin'
+            ? 'http://localhost:8888/api/deletedtickets/all'
+            : `http://localhost:8888/api/deletedtickets/${userId}`;
+ 
+        const response = await fetch(url);
+ 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
  
         const result = await response.json();
-        console.log("Fetched data:", result); // Log the fetched data
+        console.log("Fetched data:", result);
  
+        // Check if the result is an array and update state
         if (Array.isArray(result)) {
           setData(result);
         } else {
@@ -41,16 +48,7 @@ const PowerTable = () => {
     };
  
     fetchData();
-  }, []);
- 
-  const handleSelectAllChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectAll(event.target.checked);
-  };
- 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
+  }, [role, userId]); // Add role and userId as dependencies
  
   return (
     <TableContainer
@@ -71,17 +69,25 @@ const PowerTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.subject}</TableCell>
-              <TableCell>{row.priority}</TableCell>
-              <TableCell>{row.status}</TableCell>
-              <TableCell>{row.assignedAgent || 'N/A'}</TableCell>
-              <TableCell>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
-              <TableCell>{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
+          {data.length > 0 ? (
+            data.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.subject}</TableCell>
+                <TableCell>{row.priority}</TableCell>
+                <TableCell>{row.status}</TableCell>
+                <TableCell>{row.assignedAgent || 'N/A'}</TableCell>
+                <TableCell>{new Date(row.createdAt).toLocaleDateString()}</TableCell>
+                <TableCell>{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} align="center">
+                No deleted tickets found
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>
@@ -89,6 +95,3 @@ const PowerTable = () => {
 };
  
 export default PowerTable;
- 
- 
- 

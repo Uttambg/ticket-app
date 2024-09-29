@@ -1,43 +1,53 @@
-.table-con {
+/* Table Container */
+.nt-table-con {
     width: 100%;
     margin: 20px 0;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
-.table-scroll {
-    max-height: 400px; /* Adjust the height as needed */
-    overflow-y: auto; /* Enable vertical scrolling */
+ 
+/* Scrollable when content exceeds the container width */
+.nt-table-scroll {
+    overflow-x: auto;
 }
-
-table {
+ 
+.nt-table {
     width: 100%;
     border-collapse: collapse;
-    border-spacing: 0; /* Remove spacing between cells */
+    border-spacing: 0;
 }
-
-thead {
+ 
+/* Header styles */
+.nt-thead {
     background-color: #f8f8f8;
 }
-
-th, td {
+ 
+.nt-th, .nt-td {
     padding: 10px;
     border: 1px solid #ddd;
-    text-align: center; /* Center the text */
-    font-weight: normal;
-    white-space: nowrap; /* Prevent line breaks */
+    text-align: center;
+    white-space: nowrap; /* Prevent wrapping, ensuring scroll if content exceeds width */
 }
-
-th {
-    color: #0066FF;
-}
-
-tbody tr:nth-child(even) {
+ 
+/* Alternating row colors */
+.nt-tbody tr:nth-child(even) {
     background-color: #f2f2f2;
 }
-
-tbody tr:hover {
+ 
+.nt-tbody tr:hover {
     background-color: #eaeaea;
     cursor: pointer;
 }
+ 
+ 
+/* Make priority table scroll horizontally if needed */
+.nt-priority-table-container table {
+    width: 100%;
+}
+ 
+.nt-priority-table-container {
+    margin-top: 50px; /* Space between the two tables */
+}
+ 
+ 

@@ -68,7 +68,7 @@ export const getMessagesForTicket = (ticketId: string): Promise<Message[]> => {
 // Function to delete a ticket by ID
 export const deleteTicket = async (id: string): Promise<void> => {
   try {
-    await axios.delete(`${API_BASE_URL}/tickets/${id}`);
+    await axios.delete(`${API_BASE_URL}/api/tickets/${id}`);
   } catch (error) {
     console.error('Error deleting ticket:', error);
     throw error; // Propagate error for handling in the calling component

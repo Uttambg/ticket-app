@@ -52,7 +52,7 @@ const App = () => {
           {/* Nest the routes for the reports */}
           <Route
             path="/reports/*"
-            element={
+            element={<ProtectedRoute element={
               <div className="report-layout">
                 <ReportSidebar />
                 <Routes>
@@ -63,12 +63,12 @@ const App = () => {
                   <Route path="*" element={<Last7days />} />
                 </Routes>
               </div>
-            }
+            }/> }
           />
 
           <Route
             path="/agents"
-            element={
+            element={<ProtectedRoute element={
               <div className="flex">
               {/* AgentsContainer with a wider width */}
               <div className="w-[700px] h-full pr-0 border-r-2 border-gray-300">
@@ -81,7 +81,7 @@ const App = () => {
               </div>
             </div>
 
-            }
+}/> }
           />
 
     

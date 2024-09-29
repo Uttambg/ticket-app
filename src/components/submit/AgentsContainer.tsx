@@ -3,6 +3,7 @@ import AgentRow from './AgentRow';
 import Modal from './Modal';
 import { fetchAllAgents } from '../../api/apiClient';
 import { DisplayAgent } from '../../types/Ticket'; // Assuming DisplayAgent is in the Ticket file
+import useTickets from '../../api/useTickets';
  
 interface AgentWithColor extends DisplayAgent {
   iconColor: string; // Add iconColor to local agent type
@@ -49,7 +50,8 @@ export const AgentsContainer: React.FC<AgentsContainerProps> = ({ setSelectedAge
     };
     loadAgents();
   }, []);
- 
+  const { tickets, users, uniqueAgents, loading, userRole, allAgents, handleUpdateTicket, handleAssignAgent } =
+  useTickets();
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
  
@@ -151,7 +153,8 @@ export const AgentsContainer: React.FC<AgentsContainerProps> = ({ setSelectedAge
         </div>
       </div>
  
-      <div
+      {userRole === "admin" && ( 
+        <div
         className="flex flex-row items-center gap-6 min-h-[70px] cursor-pointer transition-colors bg-white border-b border-gray-300"
         onClick={handleOpenModal}
       >
@@ -161,7 +164,7 @@ export const AgentsContainer: React.FC<AgentsContainerProps> = ({ setSelectedAge
           </div>
         </div>
         <p className="text-blue-500 font-semibold">Add new agent</p>
-      </div>
+      </div>)}
  
       <div className="flex-grow bg-white rounded-b-lg h-full flex flex-col">
         <div className="flex-grow overflow-y-auto p-0">

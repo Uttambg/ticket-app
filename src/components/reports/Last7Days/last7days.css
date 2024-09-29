@@ -1,4 +1,3 @@
-
 .last7days-con {
     box-sizing: border-box;
     height: 100%;
@@ -9,21 +8,21 @@
     border-left: 1px solid #d3d3d3;
     overflow-x: hidden;
     margin-left: -800px;
-    
+   
 }
-
+ 
 .content-report {
     width: 80%;
     height: 100%;
     display: block;
 }
-
+ 
 .main-con {
     width: 100%;
     height: 100%;
     display: block;
 }
-
+ 
 .right-con {
     position: relative;
     box-sizing: border-box;
@@ -33,7 +32,7 @@
     border-color: var(--border-basic-secondary);
     overflow-x: hidden;
 }
-
+ 
 .last-con {
     display: flex;
     justify-content: center;
@@ -45,9 +44,9 @@
     border-bottom: 1px solid #d3d3d3;
     background-color: var(--surface-primary-default);
 }
-
+ 
 .heading {
-    color: #0066FF; 
+    color: #0066FF;
     font-size: 18px;
     font-weight: 600;
     height: 52px;
@@ -59,22 +58,22 @@
     text-overflow: ellipsis;
     margin: 0;
 }
-
+ 
 .inside-con {
     position: relative;
-    height: calc(100vh - 102px); 
+    height: calc(100vh - 102px);
     z-index: 0;
     overflow-y: auto;
     overflow-x: hidden;
 }
-
+ 
 .inside-con-tickets {
     padding: 10px 15px;
     width: 80%;
     overflow-x: hidden;
-    
+   
 }
-
+ 
 .reports-tickets-con {
     flex-wrap: wrap;
     justify-content: center;
@@ -84,45 +83,47 @@
     overflow-y: auto;
    
 }
-
+ 
 .ticket-report-container {
-    border: 1px solid #cccccc; 
-    border-radius: 8px; 
-    padding: 16px; 
-    background-color: #fff; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-top: 50px;
     width: 80%;  
 }
-
+ 
 .chart-container {
     width: 80%;
+    border-bottom: #d3d3d3;
 }
-
+ 
 .summary-container {
+   
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid #d3d3d3;
-    margin-bottom: 10px;
+   
+   
 }
-
+ 
 .summary-item {
     text-align: center;
     flex: 1;
-    margin: 0 8px;
+    margin: 0;
 }
-
+ 
 .summary-item h2 {
-    margin: 4px 0;
+    margin: 2px 0;
     color: #0066FF;
 }
-
+ 
 .report-info-container {
     height: 25px;
     border-top: 1px solid #d3d3d3;
     text-align: center;
 }
-
+ 
 .report-info-text {
     color: #666;
     line-height: 20px;
@@ -131,39 +132,40 @@
     font-weight: 400;
     margin-top: 20px;
 }
-
+ 
 /* Media Queries for Responsive Design */
 @media (max-width: 576px) {
     .last7days-con {
         display: none; /* Hide Last7days by default */
     }
-
+ 
     .sidebar {
         display: flex; /* Show sidebar */
         justify-content: center;
         align-items: center;
         height: 100vh; /* Full height for sidebar */
     }
-
+ 
     .content {
         display: none; /* Hide content area by default */
     }
-
+ 
     .content.show {
         display: block; /* Show content when needed */
     }
 }
-
+ 
 /* Additional styles */
 .inside-con-tickets::-webkit-scrollbar {
     width: 8px;
 }
-
+ 
 .inside-con-tickets::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 10px;
 }
-
+ 
 .inside-con-tickets::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
+ 
