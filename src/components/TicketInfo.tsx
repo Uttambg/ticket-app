@@ -134,9 +134,8 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
                 onChange={handleStatusChange}
                 className="ml-3 p-1 rounded border border-grey-300 text-sm"
               >
-                <option value="Open">Open</option>
-                <option value="Pending">Pending</option>
-                <option value="On hold">On hold</option>
+                <option value="New">New</option>
+                <option value="InProgress">InProgress</option>
                 <option value="Solved">Solved</option>
                 <option value="Closed">Closed</option>
               </select>
@@ -164,7 +163,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
           </p>
  
           {/* Render the SolvedDialog component if status is 'Solved' */}
-          {status === 'Solved' && role === 'Admin' && (
+          {status === 'Solved' && role === 'user' && (
             <SolvedDialog
               onCloseTicket={handleCloseTicket}
               onReopenTicket={handleReopenTicket}
@@ -175,7 +174,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
           <div className="mt-5 p-4 bg-white rounded-lg shadow-md shadow-blue-500/50">
             <h3 className="text-lg font-semibold mb-3 flex items-center">
               Agent
-              {role === 'Admin' && !isAssigned && (
+              {role === 'admin' && !isAssigned && (
                 <button
                   className="ml-2 text-blue-500 underline hover:text-blue-700 transition duration-200"
                   onClick={() => setShowAssignmentSection(true)}
@@ -200,21 +199,13 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
                   </div>
                 </div>
  
-                {/* Unassign button for admin only */}
-                {role === 'Admin' && (
-                  <button
-                    className="mt-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition duration-200"
-                    onClick={() => handleAgentSelection(null)}
-                  >
-                    Unassign
-                  </button>
-                )}
+               
               </div>
             ) : (
               <p className="text-gray-400">No agent assigned to this ticket.</p>
             )}
  
-            {!isAssigned && showAssignmentSection && role === 'Admin' && (
+            {!isAssigned && showAssignmentSection && role === 'admin' && (
               <AgentInfoDropdown
                 agents={agents}
                 onSelect={handleAgentSelection}

@@ -5,8 +5,12 @@ import ChartComponentbyDate from './ChartComponentbyDate';
 import NewTicketsTable from './NewTicketsTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+// Use the auth context to get role and userId
 import { Ticket } from '../types';
+ 
 import './newTickets.css';
+import { useAuth } from '../../authContext';
+ 
  
 const NewTickets: React.FC = () => {
     const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -15,6 +19,8 @@ const NewTickets: React.FC = () => {
     const [filteredData, setFilteredData] = useState<Ticket[]>([]);
     const [showTable, setShowTable] = useState(true);
     const [selectedPriority, setSelectedPriority] = useState<string>('All');
+   
+    const { role, userId } = useAuth(); // Fetch the role and userId from context
  
     useEffect(() => {
         const today = new Date();
@@ -27,18 +33,30 @@ const NewTickets: React.FC = () => {
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const response = await fetch('http://localhost:8888/api/tickets');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                let url = '';
+ 
+                // Conditionally set the URL based on the user role
+                if (role === 'admin') {
+                    url = 'http://localhost:8888/api/tickets'; // Admin fetches all tickets
+                } else if (userId) {
+                    url = `http://localhost:8888/api/tickets/user/${userId}`; // User fetches their own tickets
                 }
-                const data: Ticket[] = await response.json();
-                setTickets(data);
+ 
+                if (url) {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data: Ticket[] = await response.json();
+                    setTickets(data);
+                }
             } catch (error) {
                 console.error('Error fetching tickets', error);
             }
         };
+ 
         fetchTickets();
-    }, []);
+    }, [role, userId]); // Re-fetch if role or userId changes
  
     useEffect(() => {
         const filterTickets = () => {
@@ -48,7 +66,7 @@ const NewTickets: React.FC = () => {
                     return ticketDate >= startDate && ticketDate <= endDate;
                 });
  
-                // Apply priority filter only to filteredData, but don't change the allTickets
+                // Apply priority filter only to filteredData, but don't change allTickets
                 if (selectedPriority !== 'All') {
                     filtered = filtered.filter(ticket => ticket.priority === selectedPriority);
                 }
@@ -137,5 +155,4 @@ const NewTickets: React.FC = () => {
 };
  
 export default NewTickets;
- 
  

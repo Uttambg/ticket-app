@@ -10,14 +10,13 @@ const SignUpForm: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const userData = { name, email, password, role };
+    const userData = { name, email, password, role: 'user' };
 
     try {
       await signupUser(userData);
@@ -42,7 +41,7 @@ const SignUpForm: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center bg-gray-50" style={{ height: '100vh', margin: '0' }}>
-      <div className="max-w-md w-full space-y-8"> {/* Removed mx-auto */}
+      <div className="max-w-md w-full space-y-8">
         {/* Error Message */}
         {errorMessage && (
           <div className="bg-red-500 text-white p-4 rounded-lg mb-4 text-center">
@@ -101,40 +100,6 @@ const SignUpForm: React.FC = () => {
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   required
                 />
-              </div>
-
-              <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                  Role
-                </label>
-                <div className="relative">
-                  <select
-                    id="role"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none"
-                    required
-                  >
-                    <option value="">Select Role</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.292 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </div>
               </div>
             </div>
 

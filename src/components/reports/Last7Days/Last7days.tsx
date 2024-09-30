@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import './last7days.css';
 import ChartComponentbyday from './ChartComponentsbyday';
+import { useAuth } from '../../authContext'; // Use the auth context
  
 interface Message {
-    id: string; // Message ID
-    text: string; // Content of the message
-    timestamp: string; // Timestamp of the message
+    id: string;
+    text: string;
+    timestamp: string;
 }
  
 interface Ticket {
-    id: string; // Ticket ID
+    id: string;
     subject: string;
     priority: string;
     status: string;
     assignedAgent: string | null;
-    createdAt: string; // Creation timestamp
+    createdAt: string;
     updatedAt: string;
     messages: Message[];
     userId: number;
@@ -26,15 +27,27 @@ const Last7days: React.FC = () => {
     const [solvedCount, setSolvedCount] = useState<number>(0);
     const [closedCount, setClosedCount] = useState<number>(0);
  
+    const { role, userId } = useAuth(); // Fetch role and userId from auth context
+ 
     useEffect(() => {
         const fetchTickets = async () => {
             try {
-                const response = await fetch('http://localhost:8888/api/tickets');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                let url = '';
+                // Conditionally set the URL based on the user role
+                if (role === 'admin') {
+                    url = 'http://localhost:8888/api/tickets'; // Admin fetches all tickets
+                } else if (userId) {
+                    url = `http://localhost:8888/api/tickets/user/${userId}`; // Users fetch their own tickets
                 }
-                const data: Ticket[] = await response.json();
-                setTickets(data);
+ 
+                if (url) {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data: Ticket[] = await response.json();
+                    setTickets(data);
+                }
             } catch (error) {
                 console.error('Error fetching tickets', error);
             } finally {
@@ -43,7 +56,7 @@ const Last7days: React.FC = () => {
         };
  
         fetchTickets();
-    }, []);
+    }, [role, userId]); // Re-fetch if role or userId changes
  
     const calculateMetrics = (data: Ticket[]) => {
         const now = new Date();
