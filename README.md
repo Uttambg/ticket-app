@@ -12,3 +12,21 @@ A comprehensive Ticket Management System built with Java Spring Boot and React t
 - **Deleted Tickets**: Track and manage deleted tickets, along with associated messages.  
 - **Message Management**: Add and manage messages associated with tickets.  
 - **Solved and Closed Tickets**: A dedicated view for managing solved and closed tickets based on user roles.
+
+## Technologies Used
+
+### Backend (Java Spring Boot)
+- Spring Boot
+- Spring Data JPA (Hibernate)
+- MySQL (or any other SQL database)
+- Java 11+
+- Maven
+- JSON Web Tokens (JWT) for Authentication
+
+### Frontend (React)
+- React (TypeScript)
+- React Router for navigation
+- Axios for HTTP requests
+- React Hook Form for form management
+- DatePicker for date-based ticket filtering
+- Role-based access control
