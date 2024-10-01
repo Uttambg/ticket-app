@@ -1,13 +1,14 @@
-// src/components/SearchBar.tsx
 
+
+ 
 import React from 'react';
 import { TextField } from '@mui/material';
-
+ 
 interface SearchBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
-
+ 
 const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) => {
   return (
     <TextField
@@ -20,5 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange }) =>
     />
   );
 };
-
+ 
 export default SearchBar;
+ 
+ 

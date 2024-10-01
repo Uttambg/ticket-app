@@ -2,8 +2,8 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
-import { useAuth } from './authContext'; // Import the AuthContext
-
+import { useAuth } from './authContext';
+ 
 export const NewTicket: React.FC = () => {
   const [message, setMessage] = useState('');
   const [subject, setSubject] = useState('');
@@ -14,8 +14,8 @@ export const NewTicket: React.FC = () => {
   const [attachment, setAttachment] = useState<File | null>(null);
   const quillRef = useRef<ReactQuill>(null);
   const navigate = useNavigate();
-  const { userId } = useAuth(); // Get userId from the AuthContext
-
+  const { userId } = useAuth();
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let formErrors = { subject: '' };
@@ -23,12 +23,12 @@ export const NewTicket: React.FC = () => {
       formErrors.subject = 'Subject is required';
     }
     setErrors(formErrors);
-    
+   
     if (!formErrors.subject) {
       const ticketData = {
         subject,
         priority,
-        userId, // Use userId from AuthContext
+        userId,
         messages: [
           {
             content: message,
@@ -38,9 +38,9 @@ export const NewTicket: React.FC = () => {
           },
         ],
       };
-
-      console.log('Submitting ticket:', ticketData); // Logging ticket data
-
+ 
+      console.log('Submitting ticket:', ticketData);
+ 
       try {
         const response = await fetch('http://localhost:8888/api/tickets', {
           method: 'POST',
@@ -49,19 +49,19 @@ export const NewTicket: React.FC = () => {
           },
           body: JSON.stringify(ticketData),
         });
-
-        console.log('Response:', response); // Log the response
-
+ 
+        console.log('Response:', response);
+ 
         if (response.ok) {
-          const responseData = await response.json(); // Assuming the response contains the ticket ID
-          const ticketId = responseData.id; // Adjust this according to your API response structure
-
+          const responseData = await response.json();
+          const ticketId = responseData.id;
+ 
           console.log('Ticket submitted successfully');
           setMessage('');
           setSubject('');
           setPriority('Low');
           setAttachment(null);
-          navigate(`/ticket/${ticketId}`); // Navigate to the newly created ticket
+          navigate(`/ticket/${ticketId}`);
         } else {
           console.error('Error submitting the ticket');
         }
@@ -70,29 +70,29 @@ export const NewTicket: React.FC = () => {
       }
     }
   };
-
+ 
   const getFileAsBase64 = (file: File): Promise<string | null> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         let base64String = reader.result as string;
-
+ 
         // Strip out the MIME type prefix
         if (base64String.startsWith('data:')) {
           base64String = base64String.substring(base64String.indexOf(',') + 1);
         }
-
+ 
         resolve(base64String);
       };
       reader.onerror = () => resolve(null);
       reader.readAsDataURL(file);
     });
   };
-
+ 
   const handleImageClick = useCallback(() => {
     setIsImageModalOpen(true);
   }, []);
-
+ 
   const handleImageUrlSubmit = useCallback(() => {
     if (quillRef.current && imageUrl) {
       const editor = quillRef.current.getEditor();
@@ -101,20 +101,20 @@ export const NewTicket: React.FC = () => {
     setIsImageModalOpen(false);
     setImageUrl('');
   }, [imageUrl]);
-
+ 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setAttachment(file); // Store the uploaded file
+      setAttachment(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result && quillRef.current) {
           let base64String = event.target.result as string;
-
+ 
           if (base64String.startsWith('data:')) {
             base64String = base64String.substring(base64String.indexOf(',') + 1);
           }
-
+ 
           const editor = quillRef.current.getEditor();
           editor.insertEmbed(editor.getSelection()?.index || 0, 'image', event.target.result);
         }
@@ -123,7 +123,7 @@ export const NewTicket: React.FC = () => {
     }
     setIsImageModalOpen(false);
   }, []);
-
+ 
   return (
     <div className="p-8 bg-gray-50 min-h-screen relative">
       <h2 className="text-2xl font-semibold mb-4">New Ticket</h2>
@@ -141,7 +141,7 @@ export const NewTicket: React.FC = () => {
             <p className="text-red-500 text-sm mt-1">{errors.subject}</p>
           )}
         </div>
-
+ 
         <div className="mb-4">
           <label className="block text-gray-700">Priority</label>
           <select
@@ -155,7 +155,7 @@ export const NewTicket: React.FC = () => {
             <option>Urgent</option>
           </select>
         </div>
-
+ 
         <div className="mb-4 relative z-10">
           <label className="block text-gray-700">Message</label>
           <ReactQuill
@@ -178,12 +178,12 @@ export const NewTicket: React.FC = () => {
             placeholder="Enter message"
           />
         </div>
-
+ 
         <button className="bg-blue-500 text-white p-2 rounded" type="submit">
           Submit
         </button>
       </form>
-
+ 
       {isImageModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg">
@@ -226,5 +226,5 @@ export const NewTicket: React.FC = () => {
     </div>
   );
 };
-
+ 
 export default NewTicket;

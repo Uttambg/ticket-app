@@ -42,14 +42,12 @@ const SignUpForm: React.FC = () => {
   return (
     <div className="flex items-center justify-center bg-gray-50" style={{ height: '100vh', margin: '0' }}>
       <div className="max-w-md w-full space-y-8">
-        {/* Error Message */}
         {errorMessage && (
           <div className="bg-red-500 text-white p-4 rounded-lg mb-4 text-center">
             {errorMessage}
           </div>
         )}
 
-        {/* Success Popup */}
         {showPopup && <SuccessPopup message="You have registered successfully!" />}
 
         <div className="bg-white p-8 rounded-lg shadow-lg">

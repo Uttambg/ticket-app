@@ -1,19 +1,19 @@
 import React from 'react';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
-import useTickets from '../api/useTickets'; // Import the custom hook
-
+import useTickets from '../api/useTickets';
+ 
 const Solved: React.FC = () => {
-  const { tickets, users, loading } = useTickets(); // Use the custom hook
-
+  const { tickets, users, loading } = useTickets();
+ 
   const filteredTickets = tickets.filter(ticket => ticket.status === 'Solved');
-
+ 
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
         Solved Tickets
       </Typography>
       {loading ? (
-        <CircularProgress /> // Show a loading spinner while data is being fetched
+        <CircularProgress />
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -47,5 +47,7 @@ const Solved: React.FC = () => {
     </Box>
   );
 };
-
+ 
 export default Solved;
+ 
+ 

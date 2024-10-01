@@ -50,4 +50,12 @@
     margin-top: 50px; /* Space between the two tables */
 }
  
+.nt-table-scroll-date {
+    overflow-x: auto;  /* Enables horizontal scroll */
+    max-width: 100%;   /* Restricts width to the container */
+}
  
+.nt-table-scroll-date table {
+    width: max-content;  /* Forces the table to take up space based on content */
+    min-width: 100%;     /* Ensures the table doesn't shrink below the container width */
+} 
