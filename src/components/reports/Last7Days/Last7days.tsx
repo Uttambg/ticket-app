@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './last7days.css';
 import ChartComponentbyday from './ChartComponentsbyday';
-import { useAuth } from '../../authContext'; // Use the auth context
+import { useAuth } from '../../authContext';
  
 interface Message {
     id: string;
@@ -27,17 +27,17 @@ const Last7days: React.FC = () => {
     const [solvedCount, setSolvedCount] = useState<number>(0);
     const [closedCount, setClosedCount] = useState<number>(0);
  
-    const { role, userId } = useAuth(); // Fetch role and userId from auth context
+    const { role, userId } = useAuth();
  
     useEffect(() => {
         const fetchTickets = async () => {
             try {
                 let url = '';
-                // Conditionally set the URL based on the user role
+               
                 if (role === 'admin') {
-                    url = 'http://localhost:8888/api/tickets'; // Admin fetches all tickets
+                    url = 'http://localhost:8888/api/tickets';
                 } else if (userId) {
-                    url = `http://localhost:8888/api/tickets/user/${userId}`; // Users fetch their own tickets
+                    url = `http://localhost:8888/api/tickets/user/${userId}`;
                 }
  
                 if (url) {
@@ -56,7 +56,7 @@ const Last7days: React.FC = () => {
         };
  
         fetchTickets();
-    }, [role, userId]); // Re-fetch if role or userId changes
+    }, [role, userId]);
  
     const calculateMetrics = (data: Ticket[]) => {
         const now = new Date();
@@ -82,7 +82,7 @@ const Last7days: React.FC = () => {
     }, [tickets]);
  
     if (loading) {
-        return <div>Loading...</div>; // Optional loading state
+        return <div>Loading...</div>;
     }
  
     return (
@@ -137,4 +137,5 @@ const Last7days: React.FC = () => {
 };
  
 export default Last7days;
+ 
  

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -28,7 +29,7 @@ import SearchBar from "./SearchBar";
 import StatusDropdown from "./StatusDropdown";
 import PriorityDropdown from "./PriorityDropdown";
 import AgentDropdown from "./AgentDropdown";
-import useTickets from "../api/useTickets"; // Ensure the path is correct
+import useTickets from "../api/useTickets";
 import { Ticket, User } from "../types/Ticket";
  
 interface SidebarProps {
@@ -37,7 +38,7 @@ interface SidebarProps {
  
 const drawerWidth = 240;
  
-// Styled components
+ 
 const CustomTableCell = styled(TableCell)(({ theme }) => ({
   fontSize: "0.875rem",
   fontWeight: "bold",
@@ -101,10 +102,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   };
  
   const extractPlainText = (htmlContent: string) => {
-    // Create a temporary DOM element to use the browser's HTML parser
     const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlContent; // Set the inner HTML
-    return tempDiv.innerText; // Return the plain text
+    tempDiv.innerHTML = htmlContent;
+    return tempDiv.innerText;
   };
  
   const handleDrawerToggle = () => {
@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
  
   const handleMenuClick = (text: string) => {
     if (text === "New Ticket") {
-      navigate("/new-ticket"); // Navigate to the new ticket page
+      navigate("/new-ticket");
     } else {
       setSelectedMenu(text);
       setSearchQuery("");
@@ -130,7 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       } else {
         newSelected.add(ticket);
       }
-      setShowDropdowns(newSelected.size > 0); // Show dropdowns if any ticket is selected
+      setShowDropdowns(newSelected.size > 0);
       return newSelected;
     });
   };
@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     const isChecked = event.target.checked;
     setSelectAll(isChecked);
     setSelectedTickets(isChecked ? new Set(tickets) : new Set());
-    setShowDropdowns(isChecked); // Show dropdowns if all tickets are selected
+    setShowDropdowns(isChecked);
   };
  
  
@@ -152,13 +152,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
  
     const safeParseDate = (dateString:string) :Date => {
         const date = new Date(dateString);
-        return isNaN(date.getTime()) ? new Date(0) : date; // Fallback to epoch if invalid
+        return isNaN(date.getTime()) ? new Date(0) : date;
     };
  
     const sortedTickets = [...tickets].sort((a, b) => {
         const aDate = safeParseDate(a.createdAt);
         const bDate = safeParseDate(b.createdAt);
-        return bDate.getTime() - aDate.getTime(); // Use getTime() for comparison
+        return bDate.getTime() - aDate.getTime();
     });
  
     return sortedTickets.filter((ticket) => {
@@ -215,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   };
  
   const handleRequesterClick = (ticketId: string) => {
-    navigate(`/ticket/${ticketId}`); // Navigate to the ticket details page using ID
+    navigate(`/ticket/${ticketId}`);
   };
  
   const handleApplyChanges = () => {
@@ -229,29 +229,23 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
  
         handleUpdateTicket(ticket.id, updatedData);
  
-        if (selectedAgent !== null) { // Use selectedAgent instead of agentId
+        if (selectedAgent !== null) {
           handleAssignAgent(ticket.id, selectedAgent);
         }
       });
  
-      // Clear selections and reset states
+     
       setSelectedTickets(new Set());
       setSelectedStatus(null);
       setSelectedPriority(null);
-      setSelectedAgent(null); // Reset the selected agent
+      setSelectedAgent(null);
       setShowDropdowns(false);
     }
   };
  
- 
- 
- 
- 
- 
- 
   const drawer = (
     <Box sx={{ width: "100%" }}>
-      {/* Sidebar Header */}
+     
       <Box
         className="sidebar-header"
         sx={{
@@ -296,17 +290,17 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         </Box>
       </Box>
  
-      {/* Moved Divider Above Search Bar */}
+     
       <Divider />
  
-      {/* Wrapped Search Bar with Box */}
+     
       <Box
         sx={{
           backgroundColor: "#fff",
           borderRadius: 2,
           padding: "0 10px",
           boxShadow: "0px 1px 3px rgba(0,0,0,0.1)",
-          margin: "8px 0", // Adjust margin to create space above and below
+          margin: "8px 0",
         }}
       >
         <SearchBar
@@ -314,18 +308,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           onSearchChange={handleSearchChange}
         />
       </Box>
-
-
-
-
-
-
-
  
-     {/* Sidebar Menu */}
+   
      <List className="sidebar-menu" sx={{ padding: "8px 0" }}>
   {userRole === 'admin' ? (
-    // Admin view
+ 
     <>
       <ListItem disablePadding>
         <ListItemButton
@@ -342,7 +329,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         >
           <ListItemText primary="All Recent Tickets" />
           <Typography variant="body2" color="text.secondary">
-            {countTickets(() => true)} {/* Count for all tickets */}
+            {countTickets(() => true)}
           </Typography>
         </ListItemButton>
       </ListItem>
@@ -365,13 +352,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             {countTickets(ticket =>
               ticket.status.toLowerCase() === "new" &&
               (ticket.assignedAgent || "unassigned").toLowerCase() === "unassigned"
-            )} {/* Count for tickets to handle */}
+            )}
           </Typography>
         </ListItemButton>
       </ListItem>
     </>
-  ) : (
-    // User view
+  ) : userRole === 'agent' ? (
+   
     <>
       <ListItem disablePadding>
         <ListItemButton
@@ -388,7 +375,53 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         >
           <ListItemText primary="All Recent Tickets" />
           <Typography variant="body2" color="text.secondary">
-            {countTickets(() => true)} {/* Count for all tickets */}
+            {countTickets(() => true)}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+ 
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("Tickets To Handle")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="Tickets To Handle" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(ticket =>
+              ticket.status.toLowerCase() === "new" &&
+              (ticket.assignedAgent || "unassigned").toLowerCase() === "unassigned"
+            )}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    </>
+  ) : (
+   
+    <>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick("All Recent Tickets")}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText primary="All Recent Tickets" />
+          <Typography variant="body2" color="text.secondary">
+            {countTickets(() => true)}
           </Typography>
         </ListItemButton>
       </ListItem>
@@ -408,7 +441,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         >
           <ListItemText primary="My New Tickets" />
           <Typography variant="body2" color="text.secondary">
-            {countTickets(ticket => ticket.status.toLowerCase() === "new")} {/* Count for user new tickets */}
+            {countTickets(ticket => ticket.status.toLowerCase() === "new")}
           </Typography>
         </ListItemButton>
       </ListItem>
@@ -433,7 +466,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
               const sevenDaysAgo = new Date();
               sevenDaysAgo.setDate(now.getDate() - 7);
               return new Date(ticket.createdAt) >= sevenDaysAgo;
-            })} {/* Count for user tickets in last 7 days */}
+            })}
           </Typography>
         </ListItemButton>
       </ListItem>
@@ -441,100 +474,91 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
   )}
 </List>
  
+<Divider />
  
  
-
-
-
-
-
-
-
-
-
-
-
-
+<Typography
+  variant="h6"
+  sx={{
+    padding: "4px 16px",
+    marginBottom: "0",
+    marginTop: 2,
+    fontSize: "1.1rem",
+    fontWeight: "bold",
+    color: "#444",
+  }}
+  className="sidebar-status-header"
+>
+  Statuses
+</Typography>
  
-      <Divider />
+<List className="sidebar-status-menu" sx={{ padding: "8px 0" }}>
+  {userRole === 'agent' ? (
+   
+    ["InProgress", "Solved"].map((text) => (
+      <ListItem key={text} disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick(text)}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText
+            primary={text}
+            primaryTypographyProps={{ fontWeight: "medium" }}
+          />
+          <Typography variant="body2" color="text.secondary" sx={{ marginLeft: 1 }}>
+            {countTickets(ticket => ticket.status.toLowerCase() === text.toLowerCase())}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    ))
+  ) : (
+   
+    ["New", "InProgress", "Solved", "Closed"].map((text) => (
+      <ListItem key={text} disablePadding>
+        <ListItemButton
+          onClick={() => handleMenuClick(text)}
+          sx={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              color: "white",
+              backgroundColor: "#1261a9",
+            },
+          }}
+        >
+          <ListItemText
+            primary={text}
+            primaryTypographyProps={{ fontWeight: "medium" }}
+          />
+          <Typography variant="body2" color="text.secondary" sx={{ marginLeft: 1 }}>
+            {countTickets(ticket => ticket.status.toLowerCase() === text.toLowerCase())}
+          </Typography>
+        </ListItemButton>
+      </ListItem>
+    ))
+  )}
+</List>
  
-      {/* Status Section */}
-      <Typography
-        variant="h6"
-        sx={{
-          padding: "4px 16px",
-          marginBottom: "0",
-          marginTop: 2,
-          fontSize: "1.1rem",
-          fontWeight: "bold",
-          color: "#444",
-        }}
-        className="sidebar-status-header"
-      >
-        Statuses
-      </Typography>
- 
-      <List className="sidebar-status-menu" sx={{ padding: "8px 0" }}>
-        {["New", "InProgress", "Solved", "Closed"].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton
-              onClick={() => handleMenuClick(text)}
-              sx={{
-                padding: "8px 16px",
-                borderRadius: "8px",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  color: "white",
-                  backgroundColor: "#1261a9",
-                },
-              }}
-            >
-              <ListItemText
-                primary={text}
-                primaryTypographyProps={{ fontWeight: "medium" }}
-              />
-<Typography variant="body2" color="text.secondary" sx={{ marginLeft: 1 }}>
-          {countTickets(ticket => ticket.status.toLowerCase() === text.toLowerCase())}
-        </Typography>
- 
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
     </Box>
   );
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
   const container =
     window !== undefined ? () => window().document.body : undefined;
  
   if (loading) {
-    return <div>Loading...</div>; // Display loading indicator
+    return <div>Loading...</div>;
   }
  
-  // Enable the Apply button if any dropdown has a selected value
+ 
   const isApplyEnabled =
     selectedTickets.size > 0 &&
     (selectedPriority !== null ||
@@ -542,7 +566,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       selectedStatus !== null);
  
   return (
-    // <div>
+   
     <Box sx={{ display: "flex", width: "100%" }}>
       <AppBar
         sx={{
@@ -550,17 +574,17 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: 'transparent', // Set AppBar background to transparent
+          backgroundColor: 'transparent',
         }}
       >
         <Toolbar
           sx={{
             display: 'flex',
-            justifyContent: 'space-between', // Space between items
-            position: 'relative', // To position the Typography correctly
-            marginLeft: '80px', // Add left margin to the Toolbar
-            width: 'calc(100% - 80px)', // Adjust width to account for the margin
-            backgroundColor: '#1271a9', // Set Toolbar background to blue
+            justifyContent: 'space-between',
+            position: 'relative',
+            marginLeft: '80px',
+            width: 'calc(100% - 80px)',
+            backgroundColor: '#1271a9',
           }}
         >
         <Box
@@ -570,35 +594,35 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     width: '100%',
   }}
 >
-  <Box sx={{ width: '56px', backgroundColor: 'transparent' }} /> {/* Transparent margin area */}
+  <Box sx={{ width: '56px', backgroundColor: 'transparent' }} />
   <Typography
     variant="h6"
     noWrap
     component="div"
     sx={{
       flexGrow: 1,
-      textAlign: 'center', // Center the text
-      color: 'white', // Set text color to white for visibility
-      paddingLeft: '19%', // Add left padding to shift it towards the center
+      textAlign: 'center',
+      color: 'white',
+      paddingLeft: '19%',
       opacity: 0,
-      transform: 'translateX(-100%)', // Start off-screen to the left
-      animation: 'slideIn 1s forwards', // Apply slide-in animation
-      fontSize: '1.2rem', // Default text size
+      transform: 'translateX(-100%)',
+      animation: 'slideIn 1s forwards',
+      fontSize: '1.2rem',
       transition: 'font-size 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out', // Smooth transition for hover effect
       '@keyframes slideIn': {
         '0%': {
           opacity: 0,
-          transform: 'translateX(-100%)', // Start off-screen to the left
+          transform: 'translateX(-100%)',
         },
         '100%': {
           opacity: 1,
-          transform: 'translateX(0)', // End at the original position
+          transform: 'translateX(0)',
         },
       },
       '&:hover': {
-        fontSize: '1.8rem', // Increase text size on hover
-        transform: 'translateX(0)', // Keep it in place
-        cursor: 'pointer', // Change cursor to indicate interactivity
+        fontSize: '1.8rem',
+        transform: 'translateX(0)',
+        cursor: 'pointer',
       },
     }}
   >
@@ -610,15 +634,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         </Toolbar>
       </AppBar>
  
- 
- 
- 
- 
       <Box
         className="sidebar-nav"
         component="nav"
         sx={{
-          width: { sm: drawerWidth }, // Define the width of the drawer
+          width: { sm: drawerWidth },
           flexShrink: { sm: 0 },
         }}
         aria-label="mailbox folders"
@@ -629,12 +649,12 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           open={mobileOpen}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
-              width: drawerWidth, // Ensure the drawer's paper has the same width
+              width: drawerWidth,
             },
           }}
         >
@@ -646,9 +666,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           sx={{
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': {
-              width: drawerWidth, // Ensure the drawer's paper has the same width
+              width: drawerWidth,
               boxSizing: 'border-box',
-              marginLeft: '80px', // Add margin here if needed, but adjust as necessary
+              marginLeft: '80px',
             },
           }}
           open
@@ -656,11 +676,6 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           {drawer}
         </Drawer>
       </Box>
- 
- 
- 
- 
- 
  
       <Box
   className="sidebar-main"
@@ -672,7 +687,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     {selectedMenu}
   </Typography>
  
-  {/* Dropdowns and Apply button section */}
+ 
   {showDropdowns && (
     <Box
       className="sidebar-dropdowns"
@@ -692,9 +707,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         },
       }}
     >
-      {['StatusDropdown', 'PriorityDropdown', 'AgentDropdown'].map((Dropdown, index) => (
+     
+      {userRole === 'agent' ? (
         <Box
-          key={index}
           sx={{
             flex: 1,
             '& .MuiSelect-root': {
@@ -713,38 +728,76 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
               '& .MuiSelect-select': {
                 padding: '14px 24px',
                 fontWeight: '500',
-                fontSize: '16px', // Increase font size for better visibility
+                fontSize: '16px',
               },
             },
           }}
         >
-          {Dropdown === 'StatusDropdown' && (
-            <StatusDropdown
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
-            />
-          )}
-          {Dropdown === 'PriorityDropdown' && (
-            <PriorityDropdown
-              selectedPriority={selectedPriority}
-              onPriorityChange={(priority) => {
-                setSelectedPriority(priority);
-              }}
-            />
-          )}
-          {Dropdown === 'AgentDropdown' && (
-            <AgentDropdown
-              selectedAgent={selectedAgent}
-              onAgentChange={(id) => {
-                console.log('Selected agent ID:', id);
-                setSelectedAgent(id);
-              }}
-              allAgents={allAgents}
-              loading={loading}
-            />
-          )}
+          <StatusDropdown
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            role="agent"
+          />
         </Box>
-      ))}
+      ) : (
+       
+        <>
+          {['StatusDropdown', 'PriorityDropdown', 'AgentDropdown'].map((Dropdown, index) => (
+            <Box
+              key={index}
+              sx={{
+                flex: 1,
+                '& .MuiSelect-root': {
+                  borderRadius: '12px',
+                  backgroundColor: '#f7f9fc',
+                  border: '1px solid #b0c4de',
+                  transition: 'border 0.3s ease, background-color 0.3s ease',
+                  '&:focus, &:hover': {
+                    border: '2px solid #1976d2',
+                    backgroundColor: '#ffffff',
+                    boxShadow: '0 0 15px rgba(25, 118, 210, 0.3)',
+                  },
+                  '& fieldset': {
+                    display: 'none',
+                  },
+                  '& .MuiSelect-select': {
+                    padding: '14px 24px',
+                    fontWeight: '500',
+                    fontSize: '16px',
+                  },
+                },
+              }}
+            >
+              {Dropdown === 'StatusDropdown' && (
+                <StatusDropdown
+                  selectedStatus={selectedStatus}
+                  setSelectedStatus={setSelectedStatus}
+                  role="admin"
+                />
+              )}
+              {Dropdown === 'PriorityDropdown' && (
+                <PriorityDropdown
+                  selectedPriority={selectedPriority}
+                  onPriorityChange={(priority) => {
+                    setSelectedPriority(priority);
+                  }}
+                />
+              )}
+              {Dropdown === 'AgentDropdown' && (
+                <AgentDropdown
+                  selectedAgent={selectedAgent}
+                  onAgentChange={(id) => {
+                    console.log('Selected agent ID:', id);
+                    setSelectedAgent(id);
+                  }}
+                  allAgents={allAgents}
+                  loading={loading}
+                />
+              )}
+            </Box>
+          ))}
+        </>
+      )}
  
       <Button
         variant="contained"
@@ -772,9 +825,10 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         Apply
       </Button>
     </Box>
-  )}
+)}
  
-  {/* Table section */}
+ 
+ 
   <TableContainer
     className="sidebar-table-container"
     component={Paper}
@@ -792,12 +846,12 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           checked={selectAll}
           onChange={handleSelectAllChange}
           sx={{
-            color: '#1976d2', // Primary color for checkbox
+            color: '#1976d2',
             '&.Mui-checked': {
-              color: '#1976d2', // Checked color
+              color: '#1976d2',
             },
             '&:hover': {
-              backgroundColor: 'transparent', // No background on hover
+              backgroundColor: 'transparent',
             },
           }}
         />
@@ -805,12 +859,12 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     )}
     <CustomTableCell sx={{
       fontWeight: 'bold',
-      color: '#333', // Darker color for better contrast
-      backgroundColor: '#f7f9fc', // Light background for header
+      color: '#333',
+      backgroundColor: '#f7f9fc',
       padding: '12px 16px',
-      borderBottom: '2px solid #d0d0d0', // Subtle border
+      borderBottom: '2px solid #d0d0d0',
       '&:hover': {
-        backgroundColor: '#e0e0e0', // Slightly darker on hover
+        backgroundColor: '#e0e0e0',
       },
     }}>
       Requester
@@ -864,11 +918,8 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       Last Message
     </CustomTableCell>
   </TableRow>
+ 
 </TableHead>
- 
- 
- 
- 
  
       <TableBody>
   {filteredTickets().map((ticket) => (
@@ -876,10 +927,10 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
    <TableRow key={ticket.id}
       sx={{
         '&:hover': {
-          backgroundColor: '#e6f0ff', // Change background color on hover
-          cursor: 'pointer', // Change cursor to pointer
-          transform: 'scale(1.02)', // Scale effect on hover
-          transition: 'background-color 0.3s, transform 0.2s', // Smooth transition
+          backgroundColor: '#e6f0ff',
+          cursor: 'pointer',
+          transform: 'scale(1.02)',
+          transition: 'background-color 0.3s, transform 0.2s',
         },
       }}
     >
@@ -887,7 +938,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         <Checkbox
           checked={selectedTickets.has(ticket)}
           onChange={(e) => {
-            e.stopPropagation(); // Prevent click event from bubbling up to the row
+            e.stopPropagation();
             handleCheckboxChange(ticket);
           }}
         />
@@ -898,9 +949,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           padding: '16px',
           display: 'flex',
           alignItems: 'center',
-          cursor: 'pointer', // Change cursor to pointer
+          cursor: 'pointer',
         }}
-        onClick={() => handleRequesterClick(ticket.id)} // Click event for the entire cell
+        onClick={() => handleRequesterClick(ticket.id)}
       >
         <Box className="ticket-requester" sx={{ display: "flex", alignItems: "center" }}>
           <Logo>{getLogo(users[ticket.userId]?.name || "")}</Logo>
@@ -932,26 +983,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     </TableRow>
   ))}
 </TableBody>
-
+ 
     </Table>
   </TableContainer>
 </Box>
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
     </Box>
-    // </div>
+   
   );
 };
  

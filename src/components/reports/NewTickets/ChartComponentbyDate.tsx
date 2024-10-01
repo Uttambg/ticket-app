@@ -98,3 +98,4 @@ const ChartComponentbyDate: React.FC<ChartComponentProps> = ({ tickets, selected
 export default ChartComponentbyDate;
  
  
+ 

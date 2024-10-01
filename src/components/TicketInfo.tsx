@@ -12,8 +12,8 @@ interface TicketInfoProps {
  
 const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
   const [ticket, setTicket] = useState<any>(null);
-  const [status, setStatus] = useState<string | null>(null); // Initial state as null
-  const [priority, setPriority] = useState<string | null>(null); // Initial state as null
+  const [status, setStatus] = useState<string | null>(null); 
+  const [priority, setPriority] = useState<string | null>(null); 
  
   const [isAssigned, setIsAssigned] = useState(false);
   const [showAssignmentSection, setShowAssignmentSection] = useState(false);
@@ -22,7 +22,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
  
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
  
-  const { role } = useAuth(); // Access the role from the Auth context
+  const { role } = useAuth(); 
  
  
   const showNotification = (message: string) => {
@@ -35,7 +35,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
         const ticketData = await fetchTicketDetails(id);
         setTicket(ticketData);
        
-        // Set the status and priority from the backend
+        
         setStatus(ticketData.status || '');
         setPriority(ticketData.priority || '');
  
@@ -130,7 +130,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
             <strong>Status:</strong>
             {role === 'admin' ? (
               <select
-                value={status || ''} // Display the fetched status or an empty string
+                value={status || ''} 
                 onChange={handleStatusChange}
                 className="ml-3 p-1 rounded border border-grey-300 text-sm"
               >
@@ -148,7 +148,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
             <strong>Priority:</strong>
             {role === 'admin' ? (
               <select
-                value={priority || ''} // Display the fetched priority or an empty string
+                value={priority || ''} 
                 onChange={handlePriorityChange}
                 className="ml-3 p-1 rounded border border-gray-300 text-sm"
               >
@@ -162,7 +162,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
             )}
           </p>
  
-          {/* Render the SolvedDialog component if status is 'Solved' */}
+          
           {status === 'Solved' && role === 'user' && (
             <SolvedDialog
               onCloseTicket={handleCloseTicket}
@@ -170,7 +170,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
             />
           )}
  
-          {/* Agent Information Section */}
+          
           <div className="mt-5 p-4 bg-white rounded-lg shadow-md shadow-blue-500/50">
             <h3 className="text-lg font-semibold mb-3 flex items-center">
               Agent
@@ -187,12 +187,12 @@ const TicketInfo: React.FC<TicketInfoProps> = ({ id }) => {
             {isAssigned ? (
               <div className="flex flex-col items-center p-3 border border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200 transition duration-200">
                 <div className="flex flex-row items-center">
-                  {/* Display agent's initials */}
+                  
                   <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3 text-white font-semibold text-lg">
                     {assignedAgentName?.charAt(0).toUpperCase()}
                   </div>
  
-                  {/* Agent's name display */}
+                  
                   <div className="flex flex-col">
                     <p className="text-gray-800 p-0 m-0 font-medium text-sm">Assigned Agent:</p>
                     <p className="text-blue-600 font-bold text-base">{assignedAgentName}</p>

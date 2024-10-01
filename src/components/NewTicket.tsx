@@ -77,7 +77,7 @@ export const NewTicket: React.FC = () => {
       reader.onloadend = () => {
         let base64String = reader.result as string;
  
-        // Strip out the MIME type prefix
+     
         if (base64String.startsWith('data:')) {
           base64String = base64String.substring(base64String.indexOf(',') + 1);
         }
@@ -228,3 +228,5 @@ export const NewTicket: React.FC = () => {
 };
  
 export default NewTicket;
+ 
+ 

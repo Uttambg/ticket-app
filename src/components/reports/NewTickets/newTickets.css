@@ -5,7 +5,7 @@
     min-width: 0px;
     -webkit-box-flex: 10;
     flex: 10 1 90.9091%;    
-    border-left: 1px solid #d3d3d3; /* Add this line for the full border */
+    border-left: 1px solid #d3d3d3;
 }
  
 .content-report{
@@ -55,7 +55,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         margin: 0;
-        border-bottom: 2px solid var(--border-basic-secondary); /* Add this line for bottom border */
+        border-bottom: 2px solid var(--border-basic-secondary);
    
    
    
@@ -99,18 +99,18 @@
 .date-picker {
     display: flex;
     flex-direction: column;
-    margin-right: 20px; /* Space between date pickers */
+    margin-right: 20px;
     width: 250px;
 }
  
 .date-picker label {
     font-weight: bold;
-    margin-bottom: 5px; /* Space between label and date picker */
-    color: #333; /* Darker color for better visibility */
+    margin-bottom: 5px;
+    color: #333;
 }
  
 .react-datepicker-wrapper {
-    width: 100%; /* Ensure the date picker takes the full width */
+    width: 100%;
 }
  
 .react-datepicker__input-container {
@@ -118,62 +118,63 @@
 }
  
 .react-datepicker__input-container input {
-    padding: 10px; /* Padding for input fields */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 4px; /* Slightly rounded corners */
-    background-color: #f9f9f9; /* Light background */
-    font-size: 14px; /* Font size adjustment */
-    width: 100%; /* Full width */
-    transition: border-color 0.3s; /* Smooth transition on focus */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.3s;
 }
  
 .react-datepicker__input-container input:focus {
-    outline: none; /* Remove default outline */
-    border-color: #0066FF; /* Highlight border on focus */
-    box-shadow: 0 0 5px rgba(0, 102, 255, 0.5); /* Subtle shadow */
+    outline: none;
+    border-color: #0066FF;
+    box-shadow: 0 0 5px rgba(0, 102, 255, 0.5);
 }
  
 .react-datepicker__input-container input::placeholder {
-    color: #aaa; /* Placeholder color */
+    color: #aaa;
 }
  
  
 .priority-dropdown {
     display: flex;
     align-items: center;
-    margin-right: 20px; /* Adjust spacing as needed */
+    margin-right: 20px;
     margin-top: 15px;
 }
  
 .priority-label {
     font-weight: bold;
-    margin-right: 10px; /* Space between label and dropdown */
-    color: #333; /* Darker color for better visibility */
+    margin-right: 10px;
+    color: #333;
 }
  
 .priority-dropdown select {
-    padding: 8px 12px; /* Adjust padding for a better feel */
-    border: 1px solid #ccc; /* Light border for the dropdown */
-    border-radius: 4px; /* Slightly rounded corners */
-    background-color: #f9f9f9; /* Light background for contrast */
-    font-size: 14px; /* Font size adjustment */
-    cursor: pointer; /* Change cursor on hover */
-    transition: border-color 0.3s; /* Smooth transition on focus */
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s;
 }
  
 .priority-dropdown select:focus {
-    outline: none; /* Remove default outline */
-    border-color: #0066FF; /* Highlight border on focus */
-    box-shadow: 0 0 5px rgba(0, 102, 255, 0.5); /* Subtle shadow */
+    outline: none;
+    border-color: #0066FF;
+    box-shadow: 0 0 5px rgba(0, 102, 255, 0.5);
 }
  
 .priority-dropdown select:hover {
-    border-color: #999; /* Darken border on hover */
+    border-color: #999;
 }
  
 .priority-dropdown {
-    width: 250px; /* Adjust this value as needed */
-    margin: 10px 0; /* Optional: add margin for spacing */
+    width: 250px;
+    margin: 10px 0;
 }
+ 
  
  

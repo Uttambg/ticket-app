@@ -63,18 +63,18 @@ const AgentInfoDropdown: React.FC<AgentDropdownProps> = ({ agents, onSelect, sel
                 className="flex flex-row items-center  cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSelect(agent)}
               >
-                {/* Initial as icon */}
+                
                 <div className="flex w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mr-2 text-white font-semibold">
                   {agent.name.charAt(0).toUpperCase()}
                 </div>
                 
-                {/* Name and email display */}
+                
                 <div className=" flex flex-col ">
                   <p className="text-sm  m-0">{agent.name}</p>
                   <p className="text-xs text-gray-500">{agent.email}</p>
                 </div>
 
-                {/* Checkmark for selected agent */}
+                
                 {selectedAgent?.id === agent.id && (
                   <FontAwesomeIcon icon={faCheck} className="ml-auto text-green-500" />
                 )}

@@ -13,11 +13,11 @@ import {
  
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
  
-// Updated Ticket interface
+ 
 interface Message {
-  id: string; // Assuming message ID is a string
-  text: string; // Example message property
-  timestamp: string; // Example timestamp property
+  id: string;
+  text: string;
+  timestamp: string;
 }
  
 interface Ticket {
@@ -42,25 +42,27 @@ const ChartComponentbyday: React.FC<ChartComponentProps> = ({ tickets }) => {
  
   useEffect(() => {
     setLoading(true);
-    const counts = new Array(7).fill(0); // Array to store counts for the last 7 days
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; // Days of the week
+    const counts = new Array(7).fill(0);
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
  
     const today = new Date();
-    const currentDayIndex = today.getDay(); // Get the current day index (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+    const currentDayIndex = today.getDay();
  
-    // Loop through the last 7 days, starting from today and going backward
+   
     for (let i = 0; i < 7; i++) {
-        const currentDay = new Date(today); // Create a new date object for each day
-        currentDay.setDate(today.getDate() - i); // Move the date backward by i days
+        const currentDay = new Date(today);
+        currentDay.setDate(today.getDate() - i);  
  
-        // Filter tickets that were created on the current day
+       
         const count = tickets.filter(ticket => {
             const ticketDate = new Date(ticket.createdAt);
-            return ticketDate.toDateString() === currentDay.toDateString(); // Compare dates (ignoring time)
+            return ticketDate.toDateString() === currentDay.toDateString();
+ 
         }).length;
  
        
-        counts[(currentDayIndex - i + 7) % 7] = count; // This ensures wrapping from Sunday to Monday, etc.
+        counts[(currentDayIndex - i + 7) % 7] = count;
+   
     }
  
     setChartData({
@@ -134,5 +136,6 @@ const ChartComponentbyday: React.FC<ChartComponentProps> = ({ tickets }) => {
   );
 };
  
-export default ChartComponentbyday; 
+export default ChartComponentbyday;
+ 
  

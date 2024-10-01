@@ -14,7 +14,7 @@ type DescriptionProps = {
 };
 
 interface MessageBoxProps {
-  ticketId: string; // Accept ticketId as a prop
+  ticketId: string; 
 }
 
 const GreyDiv: React.FC<DescriptionProps> = ({ text }) => {
@@ -24,7 +24,7 @@ const GreyDiv: React.FC<DescriptionProps> = ({ text }) => {
         <p className="text-white font-semibold">Description</p>
       </div>
       <div className="bg-gray-100 p-2 rounded-b-md">
-        {/* Rendering HTML content using dangerouslySetInnerHTML */}
+        
         <div dangerouslySetInnerHTML={{ __html: text }} />
       </div>
     </div>
@@ -101,7 +101,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ ticketId }) => {
     setErrorMessage('');
     try {
       await deleteTicket(ticketId);
-      setNotificationMessage('Ticket has been deleted.'); // Show notification
+      setNotificationMessage('Ticket has been deleted.'); 
       navigate('/sidebar');
     } catch (error) {
       console.error('Error deleting ticket:', error);
@@ -138,7 +138,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ ticketId }) => {
           
         </div>
 
-        {/* Navigation and Delete button */}
+        
         <div className="bg-white flex flex-row h-[52px] w-full p-0 m-0 flex justify-between items-center border-b border-blue-300">
         <div className="flex items-center ml-4 cursor-pointer text-gray-600 hover:text-red-600 transition-colors duration-200"
         onClick={() => setIsModalOpen(true)}
@@ -147,17 +147,17 @@ const MessageBox: React.FC<MessageBoxProps> = ({ ticketId }) => {
   <span className="hover:underline">Delete ticket</span>
 </div>
 <div className="flex items-center">
-  {/* Add "<" and ">" buttons for navigation */}
+  
   <button
     onClick={goToPreviousTicket}
-    disabled={ticketIds.indexOf(ticketId) === 0} // Disable if it's the first ticket
+    disabled={ticketIds.indexOf(ticketId) === 0} 
     className="mx-2 p-2 rounded-full bg-gray-300 hover:bg-blue-500 hover:text-white disabled:bg-gray-200 disabled:cursor-not-allowed transition duration-200 shadow-md hover:shadow-lg transform hover:scale-105 disabled:scale-100"
   >
     <FontAwesomeIcon icon={faChevronLeft} />
   </button>
   <button
     onClick={goToNextTicket}
-    disabled={ticketIds.indexOf(ticketId) === ticketIds.length - 1} // Disable if it's the last ticket
+    disabled={ticketIds.indexOf(ticketId) === ticketIds.length - 1} 
     className="mx-2 p-2 rounded-full bg-gray-300 hover:bg-blue-500 hover:text-white disabled:bg-gray-200 disabled:cursor-not-allowed transition duration-200 shadow-md hover:shadow-lg transform hover:scale-105 disabled:scale-100"
   >
     <FontAwesomeIcon icon={faChevronRight} />
@@ -205,7 +205,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({ ticketId }) => {
           isLoading={isDeleting}
         />
 
-        {/* Display Notification Popup */}
+        
         {notificationMessage && (
           <NotificationPopup 
             message={notificationMessage} 

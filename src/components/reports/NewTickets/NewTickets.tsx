@@ -5,7 +5,7 @@ import ChartComponentbyDate from './ChartComponentbyDate';
 import NewTicketsTable from './NewTicketsTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-// Use the auth context to get role and userId
+ 
 import { Ticket } from '../types';
  
 import './newTickets.css';
@@ -20,7 +20,7 @@ const NewTickets: React.FC = () => {
     const [showTable, setShowTable] = useState(true);
     const [selectedPriority, setSelectedPriority] = useState<string>('All');
    
-    const { role, userId } = useAuth(); // Fetch the role and userId from context
+    const { role, userId } = useAuth();
  
     useEffect(() => {
         const today = new Date();
@@ -35,11 +35,11 @@ const NewTickets: React.FC = () => {
             try {
                 let url = '';
  
-                // Conditionally set the URL based on the user role
+               
                 if (role === 'admin') {
-                    url = 'http://localhost:8888/api/tickets'; // Admin fetches all tickets
+                    url = 'http://localhost:8888/api/tickets';
                 } else if (userId) {
-                    url = `http://localhost:8888/api/tickets/user/${userId}`; // User fetches their own tickets
+                    url = `http://localhost:8888/api/tickets/user/${userId}`;
                 }
  
                 if (url) {
@@ -56,7 +56,7 @@ const NewTickets: React.FC = () => {
         };
  
         fetchTickets();
-    }, [role, userId]); // Re-fetch if role or userId changes
+    }, [role, userId]);
  
     useEffect(() => {
         const filterTickets = () => {
@@ -66,18 +66,18 @@ const NewTickets: React.FC = () => {
                     return ticketDate >= startDate && ticketDate <= endDate;
                 });
  
-                // Apply priority filter only to filteredData, but don't change allTickets
+               
                 if (selectedPriority !== 'All') {
                     filtered = filtered.filter(ticket => ticket.priority === selectedPriority);
                 }
  
-                setFilteredData(filtered); // Only set filteredData
+                setFilteredData(filtered);
             } else {
                 setFilteredData(tickets);
             }
         };
         filterTickets();
-    }, [tickets, startDate, endDate, selectedPriority]); // Include selectedPriority in dependencies
+    }, [tickets, startDate, endDate, selectedPriority]);
  
     return (
         <div className="last7days-con">
@@ -155,4 +155,5 @@ const NewTickets: React.FC = () => {
 };
  
 export default NewTickets;
+ 
  

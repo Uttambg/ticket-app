@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { Ticket, User } from '../types/Ticket'; // Assuming Ticket and User interfaces are in ../types
+import { Ticket, User } from '../types/Ticket';
 import axios from 'axios';
 import useTickets from '../api/useTickets';
-
+ 
 const Closed: React.FC = () => {
-  const { tickets, users, loading } = useTickets(); // Use the custom hook
-
-  // Filter the closed tickets
+  const { tickets, users, loading } = useTickets();
+ 
+ 
   const filteredTickets = tickets.filter(ticket => ticket.status === 'Closed');
-
-  // Helper function to get the last message content
+ 
+ 
   const getLastMessageContent = (messages: Ticket['messages']) => {
     if (messages && messages.length > 0) {
       return messages[messages.length - 1].content;
     }
     return 'No messages';
   };
-
+ 
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
@@ -37,7 +37,7 @@ const Closed: React.FC = () => {
           </TableHead>
           <TableBody>
             {filteredTickets.map(ticket => {
-              const user = users[ticket.userId]; // Find user using userId
+              const user = users[ticket.userId];
               return (
                 <TableRow key={ticket.id}>
                   <TableCell>{user ? user.name : 'Loading...'}</TableCell>
@@ -49,7 +49,7 @@ const Closed: React.FC = () => {
                       <span dangerouslySetInnerHTML={{ __html: ticket.messages[ticket.messages.length - 1].content }} />
                     ) : (
                       'No messages'
-                    )}</TableCell> {/* Display last message */}
+                    )}</TableCell>
                 </TableRow>
               );
             })}
@@ -59,5 +59,7 @@ const Closed: React.FC = () => {
     </Box>
   );
 };
-
+ 
 export default Closed;
+ 
+ 
