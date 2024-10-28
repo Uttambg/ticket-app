@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "projectticket",
   "version": "0.1.0",
   "private": true,
@@ -12,18 +11,11 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
-=======
-  "name": "ticket-app",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
->>>>>>> 5c34b08e48836538704dbbe913527dce5fee3dc5
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.108",
-<<<<<<< HEAD
     "@types/react": "^18.3.6",
     "@types/react-dom": "^18.3.0",
     "@types/react-router-dom": "^5.3.3",
@@ -39,12 +31,6 @@
     "react-icons": "^5.3.0",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.26.2",
-=======
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
->>>>>>> 5c34b08e48836538704dbbe913527dce5fee3dc5
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -72,14 +58,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-<<<<<<< HEAD
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.12"
-=======
->>>>>>> 5c34b08e48836538704dbbe913527dce5fee3dc5
   }
 }

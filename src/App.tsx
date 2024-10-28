@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar'; // Named import
@@ -101,31 +100,3 @@ const AppWrapper = () => (
 );
 
 export default AppWrapper;
-=======
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Rolled back changes
-          </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
->>>>>>> 5c34b08e48836538704dbbe913527dce5fee3dc5
