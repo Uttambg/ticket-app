@@ -1,46 +1,32 @@
-# Getting Started with Create React App
+# Ticket Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive Ticket Management System built with Java Spring Boot and React to manage tickets, agents, and user roles efficiently. This system includes features for admins to assign tickets to agents, track ticket statuses, and manage tickets across various stages such as new, solved, and deleted. It supports both admin and agent roles and provides role-based data access and functionalities.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Ticket Management**: Create, update, assign, and delete tickets.  
+- **Admin Role**: Admins can assign tickets to agents, view all tickets, and manage ticket statuses.  
+- **Agent Role**: Agents can view and update their assigned tickets.  
+- **Authentication**: Secure login system with different views and actions based on user roles (Admin/User).  
+- **Ticket Filters**: Filter tickets by date, priority, status, and agent.  
+- **Deleted Tickets**: Track and manage deleted tickets, along with associated messages.  
+- **Message Management**: Add and manage messages associated with tickets.  
+- **Solved and Closed Tickets**: A dedicated view for managing solved and closed tickets based on user roles.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Backend (Java Spring Boot)
+- Spring Boot
+- Spring Data JPA (Hibernate)
+- MySQL (or any other SQL database)
+- Java 11+
+- Maven
+- JSON Web Tokens (JWT) for Authentication
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Frontend (React)
+- React (TypeScript)
+- React Router for navigation
+- Axios for HTTP requests
+- React Hook Form for form management
+- DatePicker for date-based ticket filtering
+- Role-based access control
