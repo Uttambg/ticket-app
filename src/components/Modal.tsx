@@ -9,7 +9,7 @@ interface ModalProps {
   confirmText: string;
   cancelText: string;
   isLoading?: boolean; 
-
+}
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, title, message, confirmText, cancelText,isLoading = false, }) => {
   const modalRef = useRef<HTMLDivElement>(null);
